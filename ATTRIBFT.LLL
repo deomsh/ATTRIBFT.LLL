@@ -779,6 +779,7 @@ if /i %filesys%==fat32 && if not %entry%>=%dataarea% && endlocal && set result= 
 call :datetime
 if %mode%==setmodtime && if not exist moddate && endlocal && set result= && set "message=Moddate not found" && goto :eof
 if %mode%==setcreatime && if not exist creadate && endlocal && set result= && set "message=Creadate not found" && goto :eof
+set hundreth=
 set time=%~1 &; call Fn.11 "%time%" ":" && set colon=Y
 if %colon%==Y &; if "%time:~2,1%"==":" && if "%time:~5,1%"==":" && if not "%time:~7%"=="" && set hour=%time:~0,2% && set minute=%time:~3,2% && set second=%time:~6,2% ! endlocal && set result= && set "message=Format of Time must be hh[:]mm[:]ss and not %time%" && goto :eof
 if %colon%==Y && if %mode%==setcreatime && if not "%time:~8%"=="" &; if "%time:~8,1%"==":" && set /a hundreth=%time:~9,2%
