@@ -1,0 +1,11 @@
+!BAT
+#-#+ ATTRIBFT.G4B v.0.2 (20220623), by deomsh
+#-#+ Command-line frontend for ATTRIBFT.LLL
+set result=
+set message=
+ATTRIBFT.LLL %*
+if exist result &; if "%result:~0,1%"==" " && echo $[0x00]"$[0xF0]%result%
+if exist result &; if not "%result:~0,1%"==" " && echo $[0x00]"$[0x07]%result%
+#ORG#if exist result && echo $[0x00]"$[0x07]%result%
+if exist message && echo $[0x00]"$[0x07]%message%
+goto :eof 
