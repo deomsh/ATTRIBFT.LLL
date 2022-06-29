@@ -1,5 +1,5 @@
 !BAT
-#-#+ ATTRIBFT.LLL v0.7 (20220628), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+#-#+ ATTRIBFT.LLL v0.7.0 (20220629), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
 #-#+ Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 #-#+ Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 #-#+ Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -247,6 +247,7 @@ set message=
 setlocal && set *
 set /l mode=%~1
 call :main %*
+#MAYBE#if exist sfnfile && if exist entry && set result=%sfnfile% ! set result=
 if exist sfnfile && set result=%sfnfile% ! set result=
 if not exist message && if not exist entry && set "message=SFN of '%device%%%path%%%name%%%ext%' not found"
 if not exist message && if not exist lfnentry && if exist entry && set "message=LFN of '%device%%%path%%%name%%%ext%' not found"
@@ -603,13 +604,12 @@ goto :eof
 if exist mode && shift ! set result= && set "message=Function does not exist" && goto :eof
 debug 1
 debug msg=0
-if %~1==mdbase && if not "%~2"=="" &; checkrange 0x220:0x3FFFF calc %~2 > nul && set mdbase=%~2 && shift && shift
+if "%~1"=="mdbase" && if not "%~2"=="" &; checkrange 0x220:0x3FFFF calc %~2 > nul && set mdbase=%~2 && shift && shift
 if not exist mdbase && set /A mdbase=0x20000 ;; set /A basemem=%mdbase% * 0x200
-if /i %~1==input && if %2=="" && shift && shift
-if /i %~1==input && if not "%~2"=="" && if not "%~3"=="" && if not "%~2"=="echo" && if not "%~3"=="echo" && set "input=%~2" && shift && shift
+if /i "%~1"=="input" && if %2=="" && shift && shift
+if /i "%~1"=="input" && if not "%~2"=="" && if not "%~3"=="" && if not "%~2"=="echo" && if not "%~3"=="echo" && set "input=%~2" && shift && shift
 #NOTPOSSIBLE# setattrib
 if not "%~2"=="" && if not "%~2"=="echo" && if not %mode%==getattrib if not %mode%==getmoddate if not %mode%==getmodtime if not %mode%==getaccdate if not %mode%==getcreadate if not %mode%==getcreatime if not %mode%==getdatetimeall if not %mode%==getdatetimeattriball if not %mode%==attribecho if not %mode%==datetimeecho if not %mode%==datetimeallecho if not %mode%==datetimeattribecho if not %mode%==attriballecho if not %mode%==getsfn if not %mode%==getsfnpath if not %mode%==getsfnfile if not %mode%==getlfn if not %mode%==isdir if not %mode%==isreadonly if not %mode%==dellfn if not %mode%==getntcasebyte if not %mode%==geteapointer if not %mode%==calcsfnchecksum if not %mode%==calclfnhash if not %mode%==getlastclusnum if not %mode%==getsfnentry if not %mode%==getlfnentry if not %mode%==getlfnentries if not %mode%==getfreeentry if not %mode%==getfreeentries if not %mode%==getdelsfnentry || set "message=Abort: too many arguments on command-line, check %~2" && goto :eof
-#if not "%~2"=="" && if not "%~2"=="echo" && if not %mode%==getsfnfile if not %mode%==getlfn if not %mode%==isdir if not %mode%==isreadonly if not %mode%==dellfn if not %mode%==getntcasebyte if not %mode%==geteapointer if not %mode%==calcsfnchecksum if not %mode%==calclfnhash if not %mode%==getlastclusnum if not %mode%==getsfnentry if not %mode%==getlfnentry if not %mode%==getlfnentries if not %mode%==getfreeentry if not %mode%==getfreeentries if not %mode%==getdelsfnentry || set "message=Abort: too many arguments on command-line, check %~2" && goto :eof
 if not "%~3"=="" && if not "%~3"=="echo" && if not %mode%==setmoddate if not %mode%==setmodtime if not %mode%==setaccdate if not %mode%==setcreadate if not %mode%==setcreatime if not %mode%==makelfn if not %mode%==getlabel || set "message=Abort: too many arguments on command-line, check %~3" && goto :eof
 if not "%~4"=="" && if not "%~4"=="echo" && if not %mode%==setdatetime if not %mode%==setcreadatetime if not %mode%==setlabelattrib if not %mode%==getchainclus if not %mode%==getdelentry if not %mode%==getlabelentry || set "message=Abort: too many arguments on command-line, check %~4" && goto :eof
 #NOTNOW#if not "%~5"=="" && if not "%~'5"=="echo" && if not %mode%== || set "message=Abort: too many arguments on command-line, check %~5" && goto :eof
@@ -624,21 +624,20 @@ set "name=%~n1"
 if not exist name && if %mode%==setlabelattrib && set "name=%~n2"
 if "%name:~-1,1%"=="\" && set "name=%name:~0,-1%"
 if not exist name && if not %mode%==getsfnpath && if not %mode%==getnumclus && if not %mode:~0,11%==getfreeentr && if not %mode%==getlastclusnum && if not %mode:~0,10%==getdelentr && if not %mode%==getlabel && if not %mode%==getlabelentry && if not %mode%==getchainclus && set result= && set "message=Filename must exist" && goto :eof
-call Fn.11 "%name:~0,1%" "\xE5" && echo -e \x05%name:~1% | set name=
+call Fn.11 "%name:~0,1%" "\xE5" && echo -e "\x05%name:~1%" | set name= &; set "name=%name:~1,-1%"
 set "ext=%~x1"
 if exist ext && if "%ext:~-1,1%"=="\" && set "ext=%ext:~0,-1%"
-if not %mode%==makelfn && echo -e "%name%" | set name= &; set "name=%name:~1,-1%"
-if %mode%==makelfn && echo -e $[0x07]%name% | set name=
-#$[0x07]NOTNEEDEDANYMORE#echo -e "$[0x07]%name%" | set name= &; set "name=%name:~1,-1%"
+echo -e "%name%" | set name= &; set "name=%name:~1,-1%"
 ## If trailing space exist removed (in name too if no ext, starting spaces NOT removed :-)
 if exist ext && if "%ext%"=="." && set ext=
-if exist ext && echo -e %ext% | set ext= &; set "ext=%ext%"
-:notrailingspacedotloop
-if exist ext && call Fn.11 "%ext:~-1,1%" " " && set "ext=%ext:~0,-1%" && goto :notrailingspacedotloop
-if not exist ext && call Fn.11 "%name:~-1,1%" " " && set "name=%name:~0,-1%" && goto :notrailingspacedotloop
-if not exist ext && call Fn.11 "%name:~-1,1%" "." && set "name=%name:~0,-1%" && goto :notrailingspacedotloop
+if exist ext && echo -e "%ext%" | set ext= &; set "ext=%ext:~1,-1%"
+:nospacedotloop
+if exist ext && call Fn.11 "%ext:~-1,1%" " " && set "ext=%ext:~0,-1%" && goto :nospacedotloop
+if not exist ext && call Fn.11 "%name:~-1,1%" " " && set "name=%name:~0,-1%" && goto :nospacedotloop
+if not exist ext && call Fn.11 "%name:~-1,1%" "." && set "name=%name:~0,-1%" && goto :nospacedotloop
+if %mode%==makelfn && call Fn.11 "%name:~0,1%" " " && set "name=%name:~1%" && goto :nospacedotloop
 if "%ext%"=="." && set ext=
-if %mode%==getdelsfnentry && if exist del && call :checksfn "%name%%%ext%" "%~2" &; if not %SFN%==N && set name=%del%%%name:~1% && set mode=getsfnentry && set del= ! set result= && echo Filename is LFN && goto :eof
+if %mode%==getdelsfnentry && if exist del && call :checksfn "%name%%%ext%" "%~2" &; if not %SFN%==N && set "name=%del%%%name:~1%" && set mode=getsfnentry && set del= ! set result= && echo Filename is LFN && goto :eof
 if exist input && setlocal &; %input% &; if not %checkdev%==%device% && endlocal && set input= ! endlocal && set filesys=%filesys% && set root=%root% && set dataarea=%dataarea% && set clussize=%clussize% && set fat1=%fat1% && set fat2=%fat2% && set secpfat=%secpfat% && set devsect=%devsect% && set secpclus=%secpclus% && set numclus=%numclus% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set entry=%entry% && set lfnindex=%lfnindex% && set sfnpath=%sfnpath%
 if %mode%==calcsfnchecksum && set SFN= &; call :checksfn "%name%%%ext%" "%~2" &; if %SFN%==N && set result= && goto :eof
 if %mode%==calcsfnchecksum && call :sfnchecksum "%~2" &; goto :eof
@@ -1419,7 +1418,7 @@ set /A lfnentry=%lfnentry% - 0x20 && set /A address=%address% - 0x1E - 0x20
 #ORG#goto :getlfnloop
 
 :findfile
-if %~2==echo && echo %0: %*
+if %~2==echo && echo %0: %* "name=%name%"
 set SFN= &; call :checksfn "%name%%%ext%"
 if %mode%==getlfn && if %SFN%==N && set entry= && goto :eof
 if "%path%"=="/" && set clusnum=2
@@ -1467,7 +1466,7 @@ if %~2==echo && echo 5 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% ent
 goto :eof
 
 :findsfn
-if %~3==echo && echo %0: %*
+if %~3==echo && echo %0: %* "lfn=%~1"
 setlocal
 set chainlen=%clussize%
 set "lfn=%~1" &; set /a lfnlen=%@retval%
@@ -1476,7 +1475,8 @@ set /A c=1 && set i=1 && set l=0 && set "lfnorg=%lfn%" && set lfnnum=1 && set lf
 if %~3==echo && echo clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% lfn=%lfn% lnflen=%lfnlen% n=%n% c=%c% i=%i% l=%l%
 set entry= && set sfn= && set lfnent01= && set ENTRY= && set clusnum0= && set clusnum1= && set lfnbyteA= && set lfnbyteB= && set success= && set clusnum2=
 :loopfindLFN
-set lfnentry= && set entryA= && set entryB= && set entryC= && set LFNA= && set LFNB= && set LFNC= && set ordinal= && set skipentr=
+set lfnentry= && set entryA= && set entryB= && set entryC= && set LFNA= && set LFNB= && set LFNC= && set ordinal= && set skipentr= && set sfnfile=
+#ORG#set lfnentry= && set entryA= && set entryB= && set entryC= && set LFNA= && set LFNB= && set LFNC= && set ordinal= && set skipentr=
 if %~3==echo && echo n=%n% c=%c% i=%i% l=%l%
 if %c%==%n% && set /A ordinal=%c%+0x40 &; set ordinal=\x%ordinal:~2%
 if not %c%>=%n% &; if %c%<=15 && set ordinal=\x0%c:~2% ! set ordinal=\x%c:~2%
@@ -1612,6 +1612,7 @@ goto :checksumSFN
 :checkforbiddenchars
 if not %~2==echo if not %~3==echo || set echo=echo && echo %0 %*
 setlocal && set *
+#echo A %0 "name=%~1"
 set forbiden=Y &; call Fn.11 "%~1" "\x22" || set forbiden=
 #TEST# call Fn.11 has 'if'-properties with 'call Fn.11 "%var%" "chars" && cmdA ! cmdB'
 if not %forbiden%==Y && set forbiden=Y &; call Fn.11 "%~1" "%" || set forbiden=
@@ -1631,11 +1632,12 @@ call Fn.11 "%~1" "*" && endlocal && set forbiden=Y && goto :eof
 call Fn.11 "%~1" ":" && endlocal && set forbiden=Y && goto :eof
 call Fn.11 "%~1" "<" && endlocal && set forbiden=Y && goto :eof
 call Fn.11 "%~1" "?" && endlocal && set forbiden=Y && goto :eof
-if %mode%==makelfn && echo -n > (md)%mdbase%+1 && pause --wait=0 %~1 > (md)%mdbase%+1 && raw cat --locate=\x5C (md)%mdbase%+1 > nul && set forbiden=Y
+if %mode%==makelfn && echo -n > (md)%mdbase%+1 && pause --wait=0 "%~1" > (md)%mdbase%+1 && raw cat --locate=\x5C (md)%mdbase%+1 > nul && set forbiden=Y
+#ORG#if %mode%==makelfn && echo -n > (md)%mdbase%+1 && pause --wait=0 %~1 > (md)%mdbase%+1 && raw cat --locate=\x5C (md)%mdbase%+1 > nul && set forbiden=Y
 #BADTOO#call Fn.11 "%~1" " " || call Fn.11 "%~1" "\x5C" && endlocal && set forbiden=Y && goto :eof
-## Removes'\'-sameas'\ '#echo -e $[0x07]%~1 | set arg=
-#TODO??#if /i %mode%==makelfn && set forbiden=Y && set /u "arg=%~1" &; call Fn.11 "%arg%" "CON" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || set forbiden=
-if %echo%==echo && echo %~1 forbiden=%forbiden% && pause
+## Removes'\'-sameas'\ '#echo -e "$[0x07]%~1" | set arg=
+#TODO??#if /i %mode%==makelfn && set forbiden=Y && set /u "arg=#%#~1" &; call Fn.11 "%arg%" "CON" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || set forbiden=
+if %echo%==echo && echo "%~1" forbiden=%forbiden% && pause
 endlocal && set forbiden=%forbiden%
 goto :eof
 
