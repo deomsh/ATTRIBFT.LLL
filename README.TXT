@@ -1,4 +1,4 @@
-ATTRIBFT.LLL v0.7 (20220628), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+ATTRIBFT.LLL v0.7.0 (20220629), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
 Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -27,14 +27,16 @@ Simple debug echo-system still active: give 'echo' (without qoutes) as last argu
 
 ATTRIBFT.G4B is a simple Grub4Dos command-line frontend for ATTRIBFT.LLL, will sent arguments/ parameters to ATTRIBFT.LLL - must reside in same directory
 
-Changes V0.7:
+Changes V0.7.0:
 1) Bugfix in function 'getsfn' in case Long File Name < 11 chars (fix needed in 'newer' Grub4dos versions)
-2) Bugfix in function 'getlfn' for root (fat12/ FAT16)
-3) Bugfix for function 'getchainclus'
-4) Function 'dellfn' will search full cluster-chain in a directory and delete ALL entries of searched Long File Name (Short File Name entry still untouched!)
-5) Function 'setlabelattrib': label now new argument after DEVICE, instead DEVICE/LABEL
-6) Starting spaces allowed in Long File Name in all functions of relevance, EXCEPT function 'makelfn'
-7) Some protection of command-line, most functions will abort if too many arguments are used
+2) Bugfix in function 'getsfn' in case Long File Name in path, but file is Short File Name
+3) Bugfix in function 'getlfn' for root (fat12/ FAT16)
+4) Bugfix for function 'getchainclus'
+5) Function 'dellfn' will search full cluster-chain in a directory and delete ALL entries of searched Long File Name (Short File Name entry still untouched!)
+6) Function 'setlabelattrib': label now new argument after DEVICE, instead DEVICE/LABEL
+7) Starting spaces allowed in Long File Name in all functions of relevance, EXCEPT function 'makelfn'
+8) Some protection of command-line, most functions will abort if too many arguments are used
+9) Grub4dos operators ' && ', ' &; ', ' ;; ' and ' ! ' can be used in Long File Names (full FILE between double-qoutes mandatory: "FILE")
 
 Changes V0.6:
 1) bugfix for searching Short File Names if second name is a subset of first name and last byte of ENTRY is same as attribute.
