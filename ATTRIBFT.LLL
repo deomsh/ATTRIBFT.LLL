@@ -1,5 +1,5 @@
 !BAT
-#-#+ ATTRIBFT.LLL v0.7.0 (20220629), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+#-#+ ATTRIBFT.LLL v0.7.1 (20220713), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
 #-#+ Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 #-#+ Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 #-#+ Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -249,9 +249,9 @@ set /l mode=%~1
 call :main %*
 #MAYBE#if exist sfnfile && if exist entry && set result=%sfnfile% ! set result=
 if exist sfnfile && set result=%sfnfile% ! set result=
-if not exist message && if not exist entry && set "message=SFN of '%device%%%path%%%name%%%ext%' not found"
-if not exist message && if not exist lfnentry && if exist entry && set "message=LFN of '%device%%%path%%%name%%%ext%' not found"
-if not exist message && if not exist lfnentry && if not exist entry && set "message='%device%%%path%%%name%%%ext%' not found"
+if not exist message && if not exist entry && set "message=SFN of "%device%%%path%%%name%%%ext%' not found"
+if not exist message && if not exist lfnentry && if exist entry && set "message=LFN of "%device%%%path%%%name%%%ext%' not found"
+if not exist message && if not exist lfnentry && if not exist entry && set "message="%device%%%path%%%name%%%ext%' not found"
 debug msg=3
 endlocal && set "result=%result%" && set "output=%output%" && set "message=%message%"
 goto :eof
@@ -606,20 +606,23 @@ debug 1
 debug msg=0
 if "%~1"=="mdbase" && if not "%~2"=="" &; checkrange 0x220:0x3FFFF calc %~2 > nul && set mdbase=%~2 && shift && shift
 if not exist mdbase && set /A mdbase=0x20000 ;; set /A basemem=%mdbase% * 0x200
-if /i "%~1"=="input" && if %2=="" && shift && shift
+if /i "%~1"=="input" && if "%~2"=="" && shift && shift
+#ORG#if /i "%~1"=="input" && if %2=="" && shift && shift
 if /i "%~1"=="input" && if not "%~2"=="" && if not "%~3"=="" && if not "%~2"=="echo" && if not "%~3"=="echo" && set "input=%~2" && shift && shift
 #NOTPOSSIBLE# setattrib
-if not "%~2"=="" && if not "%~2"=="echo" && if not %mode%==getattrib if not %mode%==getmoddate if not %mode%==getmodtime if not %mode%==getaccdate if not %mode%==getcreadate if not %mode%==getcreatime if not %mode%==getdatetimeall if not %mode%==getdatetimeattriball if not %mode%==attribecho if not %mode%==datetimeecho if not %mode%==datetimeallecho if not %mode%==datetimeattribecho if not %mode%==attriballecho if not %mode%==getsfn if not %mode%==getsfnpath if not %mode%==getsfnfile if not %mode%==getlfn if not %mode%==isdir if not %mode%==isreadonly if not %mode%==dellfn if not %mode%==getntcasebyte if not %mode%==geteapointer if not %mode%==calcsfnchecksum if not %mode%==calclfnhash if not %mode%==getlastclusnum if not %mode%==getsfnentry if not %mode%==getlfnentry if not %mode%==getlfnentries if not %mode%==getfreeentry if not %mode%==getfreeentries if not %mode%==getdelsfnentry || set "message=Abort: too many arguments on command-line, check %~2" && goto :eof
-if not "%~3"=="" && if not "%~3"=="echo" && if not %mode%==setmoddate if not %mode%==setmodtime if not %mode%==setaccdate if not %mode%==setcreadate if not %mode%==setcreatime if not %mode%==makelfn if not %mode%==getlabel || set "message=Abort: too many arguments on command-line, check %~3" && goto :eof
-if not "%~4"=="" && if not "%~4"=="echo" && if not %mode%==setdatetime if not %mode%==setcreadatetime if not %mode%==setlabelattrib if not %mode%==getchainclus if not %mode%==getdelentry if not %mode%==getlabelentry || set "message=Abort: too many arguments on command-line, check %~4" && goto :eof
-#NOTNOW#if not "%~5"=="" && if not "%~'5"=="echo" && if not %mode%== || set "message=Abort: too many arguments on command-line, check %~5" && goto :eof
+if not "%~2"=="" && if not "%~2"=="echo" && if not %mode%==getattrib if not %mode%==getmoddate if not %mode%==getmodtime if not %mode%==getaccdate if not %mode%==getcreadate if not %mode%==getcreatime if not %mode%==getdatetimeall if not %mode%==getdatetimeattriball if not %mode%==attribecho if not %mode%==datetimeecho if not %mode%==datetimeallecho if not %mode%==datetimeattribecho if not %mode%==attriballecho if not %mode%==getsfn if not %mode%==getsfnpath if not %mode%==getsfnfile if not %mode%==getlfn if not %mode%==isdir if not %mode%==isreadonly if not %mode%==dellfn if not %mode%==getntcasebyte if not %mode%==geteapointer if not %mode%==calcsfnchecksum if not %mode%==calclfnhash if not %mode%==getlastclusnum if not %mode%==getsfnentry if not %mode%==getlfnentry if not %mode%==getlfnentries if not %mode%==getfreeentry if not %mode%==getfreeentries if not %mode%==getdelsfnentry || set result= && set "message=Abort: too many arguments on command-line, check "%~2"" && goto :eof
+if not "%~3"=="" && if not "%~3"=="echo" && if not %mode%==setmoddate if not %mode%==setmodtime if not %mode%==setaccdate if not %mode%==setcreadate if not %mode%==setcreatime if not %mode%==makelfn if not %mode%==getlabel || set result= && set "message=Abort: too many arguments on command-line, check "%~3"" && goto :eof
+if not "%~4"=="" && if not "%~4"=="echo" && if not %mode%==setdatetime if not %mode%==setcreadatetime if not %mode%==setlabelattrib if not %mode%==getchainclus if not %mode%==getdelentry if not %mode%==getlabelentry || set result= && set "message=Abort: too many arguments on command-line, check "%~4"" && goto :eof
+#NOTNOW#if not "%~5"=="" && if not "%~5"=="echo" && if not %mode%== || set result= && set "message=Abort: too many arguments on command-line, check "%~5"" && goto :eof
 if exist input &; if "%~2"=="echo" && echo "input=%input%" ! if "%~3"=="echo" && echo "input=%input%" ! if "%~4"=="echo" && echo "input=%input%" ! if "%~5"=="echo" && echo "input=%input%" ! if "%~6"=="echo" && echo "input=%input%" ! if "%~7"=="echo" && echo "input=%input%" ! if "%~8"=="echo" && echo "input=%input%"
-call :checkforbiddenchars "%~1" "%~2" &; if %forbiden%==Y && set "message=Forbidden chars found in %~1"
-if not %mode%==makelfn |; if not %forbiden%==Y && call :checkforbiddenchars "%~2" "%~3" &; if %forbiden%==Y && set "message=Forbidden chars found in %~2"
+call :checkforbiddenchars "%~1" "%~2" &; if %forbiden%==Y && set "message=Forbidden chars found in "%~1""
+if not %mode%==makelfn |; if not %forbiden%==Y && call :checkforbiddenchars "%~2" "%~3" &; if %forbiden%==Y && set "message=Forbidden chars found in "%~2""
 if %forbiden%==Y && set result= && goto :eof ! set forbiden=
-set device=%~d1 &; if %device%==(md) && set "message=Abort: device '%device%' is not valid" && set result= && goto :eof
-set "path=%~p1" &; echo -e $[0x07]%path% | set path=
-if %mode%==makelfn && if not "%path%"=="/" && call Fn.11 "%path%" "/ " && set "message=Abort: no starting space allowed in directories in '%path%'" && set result= && goto :eof
+set "device=%~d1" &; if "%device%"=="(md)" && set "message=Device "%device%" is not valid" && set result= && goto :eof
+set "path=%~p1" &; echo -e "%path%" | set path= &; set "path=%path:~1,-1%"
+#ORG#set "path=%~p1" &; echo -e $[0x07]%path% | set path=
+#echo "path=%path%" && goto :eof
+if %mode%==makelfn && if not "%path%"=="/" && call Fn.11 "%path%" "/ " && set "message=Abort: no starting space allowed in directories in path "%path%"" && set result= && goto :eof
 set "name=%~n1"
 if not exist name && if %mode%==setlabelattrib && set "name=%~n2"
 if "%name:~-1,1%"=="\" && set "name=%name:~0,-1%"
@@ -637,37 +640,39 @@ if not exist ext && call Fn.11 "%name:~-1,1%" " " && set "name=%name:~0,-1%" && 
 if not exist ext && call Fn.11 "%name:~-1,1%" "." && set "name=%name:~0,-1%" && goto :nospacedotloop
 if %mode%==makelfn && call Fn.11 "%name:~0,1%" " " && set "name=%name:~1%" && goto :nospacedotloop
 if "%ext%"=="." && set ext=
-if %mode%==getdelsfnentry && if exist del && call :checksfn "%name%%%ext%" "%~2" &; if not %SFN%==N && set "name=%del%%%name:~1%" && set mode=getsfnentry && set del= ! set result= && echo Filename is LFN && goto :eof
+if %mode%==makelfn && echo -n > (md)%mdbase%+1 && pause --wait=0 "%name%%%ext%" > (md)%mdbase%+1 && raw cat --locate=\x5C (md)%mdbase%+1 > nul && set result= && set "message=Forbidden chars found in "%~1"" && goto :eof
+if %mode%==getdelsfnentry && if exist del && call :checksfn "%name%%%ext%" "%~2" &; if not %SFN%==N && set "name=%del%%%name:~1%" && set mode=getsfnentry && set del= ! set result= && set "message="%name%%%ext%" is a Long File Name" && goto :eof
 if exist input && setlocal &; %input% &; if not %checkdev%==%device% && endlocal && set input= ! endlocal && set filesys=%filesys% && set root=%root% && set dataarea=%dataarea% && set clussize=%clussize% && set fat1=%fat1% && set fat2=%fat2% && set secpfat=%secpfat% && set devsect=%devsect% && set secpclus=%secpclus% && set numclus=%numclus% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set entry=%entry% && set lfnindex=%lfnindex% && set sfnpath=%sfnpath%
 if %mode%==calcsfnchecksum && set SFN= &; call :checksfn "%name%%%ext%" "%~2" &; if %SFN%==N && set result= && goto :eof
 if %mode%==calcsfnchecksum && call :sfnchecksum "%~2" &; goto :eof
 if %mode%==calclfnhash && call :lfnhash "%name%%%ext%" "%~2" &; goto :eof
-if not exist input && call :filesystem "%device%" &; if not exist filesys && set "message=Target filesystem not found" && goto :eof ! if not /i %filesys:~0,3%==fat && set result= && set "message=Target filesystem %filesys% is not FAT" && goto :eof
-if exist input &; if not exist filesys && set "message=Target filesystem not found" && goto :eof ! if not /i %filesys:~0,3%==fat && set result= && set "message=Target filesystem %filesys% is not FAT" && goto :eof
-if not exist input && call :bootblockbase "%device%" &; if exist message && goto :eof
+if not exist input && call :filesystem "%device%" &; if not exist filesys && set "message=Target filesystem not found" && goto :eof ! if not /i %filesys:~0,3%==fat && set result= && set "message=Target filesystem "%filesys%" is not FAT" && goto :eof
+if exist input &; if not exist filesys && set result= && set "message=Target filesystem not found" && goto :eof ! if not /i %filesys:~0,3%==fat && set result= && set "message=Target filesystem "%filesys%" is not FAT" && goto :eof
+if not exist input && call :bootblockbase "%device%" &; if exist message && set result= && goto :eof
 set /A devsize=%devsect% * 0x200
 set "output=set checkdev=%device% && set filesys=%filesys% && set secpclus=%secpclus% && set clussize=%clussize% && set devsect=%devsect% && set secpfat=%secpfat% && set fat1=%fat1% && set fat2=%fat2% && set root=%root% && set dataarea=%dataarea% && set numclus=%numclus%" && set input=
 if %mode%==getnumclus && goto :eof
-if %mode%==setlabelattrib && if not %~2==08 if not %~3==08 || set labeltyp=08
-if %mode%==setlabelattrib && if not %~2==28 if not %~3==28 || set labeltyp=28
-if %mode%==getlabel && if not %~2==08 if not %~3==08 || set labeltyp=08
-if %mode%==getlabel && if not %~2==28 if not %~3==28 || set labeltyp=28
+if %mode%==setlabelattrib && if not "%~2"=="08" if not "%~3"=="08" || set labeltyp=08
+if %mode%==setlabelattrib && if not "%~2"=="28" if not "%~3"=="28" || set labeltyp=28
+if %mode%==getlabel && if not "%~2"=="08" if not "%~3"=="08" || set labeltyp=08
+if %mode%==getlabel && if not "%~2"=="28" if not "%~3"=="28" || set labeltyp=28
 if not %mode%==getlabel if not %mode%==setlabelattrib |; call :getsfnlabel "%labeltyp%" "%~3" &; goto :eof
 set chainlen=%clussize%
 if %mode%==dellfn && call :dellfnfile "%~2" "%~3" &; goto :eof
 if %mode:~0,7%==makelfn && call :makelfnfile "%~2" "%~3" &; goto :eof
-if not exist bytedone && call :findpath "%path%" "%~2" &; if %clusnum%==0 && set result= && set "message=%~dp1 not found" && goto :eof
+if not exist bytedone && call :findpath "%path%" "%~2" &; if %clusnum%==0 && set result= && set "message="%~dp1" not found" && goto :eof
 if not %mode%==getlastclusnum if not %mode%==getchainclus if not %mode:~0,11%==getfreeentr if not %mode:~0,10%==getdelentr || if /i %filesys%==fat32 && if "%path%"=="/" && if not exist clusnum && set clusnum=2
 set chainlen=%clussize%
 if %mode%==getchainclus && call :getsfnchainclus "%~2" "%~3" &; goto :eof
 if not %mode:~0,11%==getfreeentr if not %mode%==getlastclusnum || call :freeentry "%clusnum%" "%bytedone%" "%dirlen%" "%~2" "%~3" && goto :eof
-if %mode%==getdelentry && if not "%~2"=="" &; if not %~2==echo && checkrange 22:-1 calc %~2 > nul && set result= && goto :eof ! checkrange 22:-1 calc %~3 > nul && set result= && goto :eof
+if %mode%==getdelentry && if not "%~2"=="" &; if not "%~2"=="echo" && checkrange 22:-1 calc %~2 > nul && set result= && set "message="%~2" is above 21" && goto :eof ! checkrange 22:-1 calc %~3 > nul && set result= && set "message="%~3" is above 21" && goto :eof
+#ORG#if %mode%==getdelentry && if not "%~2"=="" &; if not "%~2"=="echo" && checkrange 22:-1 calc %~2 > nul && set result= && set "message="goto :eof ! checkrange 22:-1 calc %~3 > nul && set result= && goto :eof
 if not %mode:~0,10%==getdelentr || call :delentry "%clusnum%" "%bytedone%" "%dirlen%" "%~2" "%~3" && goto :eof
 if %mode%==getsfnpath && goto :eof
 if %mode%==getlfn && call :getlfnfile "%name%%%ext%" "%~2" &; goto :eof
-if not "%path%"=="/" && if not exist entry && set result= && set "message=%~dp1 not found" && goto :eof
-if not exist bytedone && set result= && set "message=%~dp1 not found" && goto :eof
-call :findfile "%name%%%ext%" "%~2" &; if not %mode:~0,10%==getlfnentr && if not %mode%==getsfn && if not exist entry && set result= && set "message=%~f1 not found" && goto :eof ! if %mode:~0,10%==getlfnentr && if not exist lfnentry && set result= && set "message=lfnentry of '%~f1' not found" && goto :eof ! if %mode%==getsfn && if not exist lfnentry && set result= && set "message=LFN '%~f1' not found" && goto :eof
+if not "%path%"=="/" && if not exist entry && set result= && set "message="%~dp1" not found" && goto :eof
+if not exist bytedone && set result= && set "message="%~dp1" not found" && goto :eof
+call :findfile "%name%%%ext%" "%~2" &; if not %mode:~0,10%==getlfnentr && if not %mode%==getsfn && if not exist entry && set result= && set "message=%~f1 not found" && goto :eof ! if %mode:~0,10%==getlfnentr && if not exist lfnentry && set result= && set "message=lfnentry of "%~f1" not found" && goto :eof ! if %mode%==getsfn && if not exist lfnentry && set result= && set "message=LFN "%~f1" not found" && goto :eof
 if %mode%==setmoddate && call :setsfndate "%~2" "%~3" &; goto :eof
 if %mode%==setmodtime && call :setsfntime "%~2" "%~3" &; goto :eof
 if %mode%==setmoddatetime && setlocal && set mode=setmoddate && call :setsfndate "%~2" "%~3" "%~4" &; if not exist result && endlocal && goto :eof ! endlocal && shift
@@ -681,11 +686,11 @@ if %mode%==getntcasebyte && call :getsfnntcasebyte "%~2" &; goto :eof
 if %mode%==geteapointer && call :geteapointerbytes "%~2" &; goto :eof
 if not %mode%==getsfn if not %mode%==getsfnfile || goto :eof
 if %mode%==getlfnentry &; if exist lfnentry && goto :eof ! set result= && goto :eof
-if %mode%==issfnreadonly &; if not exist entry && set "message=%~1 not found" && goto :eof ! call :issfnattrib "%entry%" "%~2" && goto :eof
-if %mode%==issfndir &; if not exist entry && set "message=%~1 not found" && goto :eof ! call :issfnattrib "%entry%" "%~2" && goto :eof
+if %mode%==issfnreadonly &; if not exist entry && set "message="%~1" not found" && goto :eof ! call :issfnattrib "%entry%" "%~2" && goto :eof
+if %mode%==issfndir &; if not exist entry && set "message="%~1" not found" && goto :eof ! call :issfnattrib "%entry%" "%~2" && goto :eof
 if not %mode%==getsfnentry || goto :eof
-if not exist entry && set "message=%~1 not found" && goto :eof
-if %mode%==setattrib && if not "%~2"=="" && if not /i %~2==echo && set /l setattr=%~2 && shift &; if not "%~3"=="" && if not /i %~3==echo && set /l setattr=%setattr%%%~3 && shift &; if not "%~4"=="" && if not /i %~4==echo && set /l setattr=%setattr%%%~4 && shift &; if not "%~5"=="" && if not /i %~5==echo && set /l setattr=%setattr%%%~5 && shift &; if not "%~6"=="" && if not /i %~6==echo && set /l setattr=%setattr%%%~6 && shift &; if not "%~7"=="" && if not /i %~7==echo && set /l setattr=%setattr%%%~7 && shift &; if not "%~8"=="" && if not /i %~8==echo && set /l setattr=%setattr%%%~8 && shift
+if not exist entry && set "message="%~1" not found" && set result= && goto :eof
+if %mode%==setattrib && if not "%~2"=="" && if not /i "%~2"=="echo" && set /l setattr=%~2 && shift &; if not "%~3"=="" && if not /i "%~3"=="echo" && set /l setattr=%setattr%%%~3 && shift &; if not "%~4"=="" && if not /i "%~4"=="echo" && set /l setattr=%setattr%%%~4 && shift &; if not "%~5"=="" && if not /i "%~5"=="echo" && set /l setattr=%setattr%%%~5 && shift &; if not "%~6"=="" && if not /i "%~6"=="echo" && set /l setattr=%setattr%%%~6 && shift &; if not "%~7"=="" && if not /i "%~7"=="echo" && set /l setattr=%setattr%%%~7 && shift &; if not "%~8"=="" && if not /i "%~8"=="echo" && set /l setattr=%setattr%%%~8 && shift
 call Fn.11 "%mode%" "attrib" && call :attributes "%setattr%" "%~2"
 if not %mode%==getmoddate if not %mode%==getmodtime if not %mode%==getaccdate if not %mode%==getcreadate if not %mode%==getcreatime if not %mode:~0,11%==getdatetime if not %mode:~0,8%==datetime if not %mode%==attriballecho || call :datetime "%~2"
 if exist hundreth && if %hundreth%<=99 && set creasec=0 && set /a hundreth=%hundreth% ! if %hundreth%<=199 && set creasec=1 && set /a hundreth=%hundreth%-100 ! if %hundreth%>=200 && set creasec=1 && set hundreth=0
@@ -698,8 +703,8 @@ goto :eof
 
 :getsfnchainclus
 setlocal
-if not %~1==echo if not %~2==echo || set echo=echo
-if not "%~1"=="" && if not %~1==echo && set /a max=2m/%clussize% &; checkrange 1:%max% calc %~1 && set /a getclus=%~1
+if not "%~1"=="echo" if not "%~2"=="echo" || set echo=echo
+if not "%~1"=="" && if not "%~1"=="echo" && set /a max=2m/%clussize% &; checkrange 1:%max% calc %~1 && set /a getclus=%~1
 if exist getclus && set chainnum=1
 if %echo%==echo && echo %0 %* getclus=%getclus% chainnum=%chainnum% clusnum=%clusnum% dataarea=%dataarea% bytedone=%bytedone%
 :getsfnchainloop
@@ -713,10 +718,10 @@ goto :eof
 
 :getsfnlabel
 setlocal
-if %~2==echo && set echo=echo
+if "%~2"=="echo" && set echo=echo
 if %echo%==echo && echo %0 mode=%mode% labeltyp=%labeltyp% root=%root% dataarea=%dataarea% && pager off
-if %mode%==setlabelattrib && set "name=%name:~0,8%" && set "ext=.%name:~8,3%" && set SFN= && call :checksfn &; if %SFN%==N && endlocal && set volentry= && set "message=Label '%name%%%ext%' is not a valid SFN" && goto :eof ! call :catfile "%name%%%ext%"
-if %mode%==setlabelattrib && if not exist ENTRY && endlocal && set volentry= && set "message=ENTRY of Label '%name%%%ext%' is not made" && goto :eof
+if %mode%==setlabelattrib && set "name=%name:~0,8%" && set "ext=.%name:~8,3%" && set SFN= && call :checksfn &; if %SFN%==N && endlocal && set volentry= && set "message=Label "%name%%%ext%" is not a valid SFN" && goto :eof ! call :catfile "%name%%%ext%"
+if %mode%==setlabelattrib && if not exist ENTRY && endlocal && set volentry= && set "message=ENTRY of Label "%name%%%ext%" is not made" && goto :eof
 if %echo%==echo && echo A mode=%mode% ENTRY=%ENTRY% && pause
 if exist root && set /A skipbyte=%root%+0xB && set /A dirlen=%dataarea%-%root% ! set /A skipbyte=%dataarea%+0xB && set dirlen=%clussize% && set clusnum=2
 set /A endbyte=%skipbyte%+%dirlen%
@@ -745,18 +750,18 @@ if %~2==ext && set mode=ext && set "EXT=%~1" ! set mode=name && set "NAME=%~1"
 #NOTNEEDEDANYMORE#:trailingzerosloop
 if %mode%==ext && call Fn.11 "%EXT:~1,1%" " " && set "EXT=.%EXT:~2%" &; call Fn.11 "%EXT:~1,1%" " " && goto :trailingzerosloop ! set "result=%EXT%"
 if %mode%==name && call Fn.11 "%NAME:~0,1%" " " && set "NAME=%NAME:~1%" &; call Fn.11 "%NAME:~0,1%" " " && goto :trailingzerosloop ! set "result=%NAME%"
-if not %~3==echo if not %~4==echo || echo %0: %* && set && pause
+if not "%~3"=="echo" if not "%~4"=="echo" || echo %0: %* && set && pause
 endlocal && set "result=%result%"
 goto :eof
 
 :geteapointerbytes
 setlocal
-if /i %filesys%==fat32 && endlocal && set result= && set "message=Function '%mode%' not available on FAT32" && goto :eof
+if /i %filesys%==fat32 && endlocal && set result= && set "message=Function "%mode%" not available on FAT32" && goto :eof
 if not %entry%>=%root% && endlocal && set result= && goto :eof
-if %~1==echo && echo A root=%root% dataarea=%dataarea% entry=%entry% basemem=%basemem%
+if "%~1"=="echo" && echo A root=%root% dataarea=%dataarea% entry=%entry% basemem=%basemem%
 set /A address=%basemem%+0x14 &; read %address% ;; set /A result=%@retval%&0xffff
-if %~1==echo && echo B result=%result%
-if %~1==echo && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && pause
+if "%~1"=="echo" && echo B result=%result%
+if "%~1"=="echo" && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && pause
 endlocal && set result=%result%
 goto :eof
 
@@ -764,10 +769,10 @@ goto :eof
 setlocal
 if not /i %filesys%==fat32 && if not %entry%>=%root% && endlocal && set result= && goto :eof
 if /i %filesys%==fat32 && if not %entry%>=%dataarea% && endlocal && set result= && goto :eof
-if %~1==echo && echo A root=%root% dataarea=%dataarea% entry=%entry% basemem=%basemem%
+if "%~1"=="echo" && echo A root=%root% dataarea=%dataarea% entry=%entry% basemem=%basemem%
 set /A address=%basemem%+0xC &; read %address% ;; set /A result=%@retval%&0xff
-if %~1==echo && echo B result=%result%
-if %~1==echo && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && pause
+if "%~1"=="echo" && echo B result=%result%
+if "%~1"=="echo" && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && pause
 endlocal && set result=%result%
 goto :eof
 
@@ -787,21 +792,21 @@ if not %colon%==Y &; if not "%time:~5,1%"=="" && set hour=%time:~0,2% && set min
 if not %colon%==Y && if %mode%==setcreatime &; if not "%time:~7%"=="" && if "%time:~8%"=="" && if %mode%==setcreatime && set hundreth=%time:~6,2%
 if %mode%==setcreatime && if not exist hundreth && set hundreth=0
 if %hour%>=24 && set "message=Hour %hour% is not valid" ;; if not exist message && if %minute%>=60 && set "message=Minute %minute% is not valid" ;; if not exist message && if %second%>=60 && set "message=Second %second% is not valid" ;; if exist message && endlocal && set "message=%message%" && set result= && goto :eof
-if %~2==echo && echo %0 mode=%mode% time=%time% colon=%colon% hour=%hour% minute=%minute% second=%second% hundreth=%hundreth%
+if "%~2"=="echo" && echo %0 mode=%mode% time=%time% colon=%colon% hour=%hour% minute=%minute% second=%second% hundreth=%hundreth%
 set /A hour=%hour%<<11 ;; set /A minute=%minute%<<5 ;; if %mode%==setcreatime && calc %second% % 2 && set /A hundreth=%hundreth%+100 && set /A second=%second%-1 ;; set /A second=%second%/2
 set /A time=%hour%+%minute%+%second% ;; set time=0000%time:~2% ;; set time=\x%time:~-2,2%\x%time:~-4,2%
 if %mode%==setmodtime && if exist entry && set /A skip=%entry%+0x16
 if %mode%==setcreatime && if exist entry && set /A skip=%entry%+0xE
-if %~2==echo && echo A entry=%entry% skip=%skip% hour=%hour% minute=%minute% second=%second%  hundreth=%hundreth% time=%time%
-if %~2==echo && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && echo
-if not %skip%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' skip=%skip%" && set result= && goto :eof
-if %~2==echo && echo B entry=%entry% ENTRY=%ENTRY% && pause
+if "%~2"=="echo" && echo A entry=%entry% skip=%skip% hour=%hour% minute=%minute% second=%second%  hundreth=%hundreth% time=%time%
+if "%~2"=="echo" && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && echo
+if not %skip%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" skip=%skip%" && set result= && goto :eof
+if "%~2"=="echo" && echo B entry=%entry% ENTRY=%ENTRY% && pause
 if exist skip && raw cat --skip=%entry% --locate="%ENTRY%" --length=11 %device%%0+%devsect% > nul &; raw write --offset=%skip% %device%%0+%devsect% %time% > nul && set result=1
-if %~2==echo && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && echo
+if "%~2"=="echo" && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && echo
 set skip= &; if %mode%==setcreatime && if %result%==1 && if exist hundreth && if exist entry && set /A skip=%entry%+0xD && set result= && set /A hundreth=%hundreth% &; set hundreth=00%hundreth:~2% &; set hundreth=\x%hundreth:~-2,2%
-if exist skip && if not %skip%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' skip=%skip%" && set result= && goto :eof
-if %mode%==setcreatime && if exist skip && cat --skip=%entry% --locate=%ENTRY% --length=11 %device%%0+%devsect% > nul && raw write --offset=%skip% %device%%0+%devsect% %hundreth% > nul && set result=1
-if %~2==echo && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && pause
+if exist skip && if not %skip%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" skip=%skip%" && set result= && goto :eof
+if %mode%==setcreatime && if exist skip && raw cat --skip=%entry% --locate=%ENTRY% --length=11 %device%%0+%devsect% > nul && raw write --offset=%skip% %device%%0+%devsect% %hundreth% > nul && set result=1
+if "%~2"=="echo" && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && pause
 endlocal && set result=%result%
 goto :eof
 
@@ -814,18 +819,18 @@ if %hyphen%==Y &; if "%date:~4,1%"=="-" && if "%date:~7,1%"=="-" && if "%date:~1
 if %hyphen%==Y && call Fn.11 "%year%%%month%%%day%" "-" && echo Format of Date must be yyyy[-]mm[-]dd and not %date% && endlocal && set result= && goto :eof
 if not %hyphen%==Y &; if "%date:~8%"=="" && set /a year=%date:~0,4% && set /a month=%date:~4,2% && set /a day=%date:~6,2% ! endlocal && set result= && set "message=Format of Date must be yyyy[-]mm[-]dd and not %date%" && goto :eof
 if not %year%<=1979 if not %year%>=2108 || set "message=Year %year% is not valid" ;; if not exist message && if not %month%<=0 if not %month%>=13 || set "message=Month %month% is not valid" ;; if not exist message && if not %day%<=0 if not %day%>=32 || set "message=Day %day% is not valid" ;; if not exist message && if %day%==31 && checkrange 2,4,6,9,11 calc %month% && set "message=Date %date% is not valid" ;; if not exist message && if %day%==30 && if %month%==02 && set "message=Date %date% is not valid" ;; if not exist message && if %day%==29 && if %month%==02 && calc %year% % 4 && set "message=Date %date% is not valid" ;; if not exist message && if %year%==2100 && if %month%==02 && if %day%==29 && set "message=Date %date% is not valid" ;; if exist message && endlocal && set "message=%message%" && set result= && goto :eof
-if %~2==echo && echo %0 mode=%mode% date=%date% hyphen=%hyphen% year=%year% month=%month% day=%day%
+if "%~2"=="echo" && echo %0 mode=%mode% date=%date% hyphen=%hyphen% year=%year% month=%month% day=%day%
 set /A year=%year%-1980 ;; set /A year=%year%<<9 ;; set /A month=%month%<<5 ;; set /A date=%year%+%month%+%day% ;; set date=0000%date:~2% ;; set date=\x%date:~-2,2%\x%date:~-4,2%
 if %mode%==setmoddate && if exist entry && set /A skip=%entry%+0x18
 if %mode%==setaccdate && if exist entry && set /A skip=%entry%+0x12
 if %mode%==setcreadate && if exist entry && set /A skip=%entry%+0x10
-if %~2==echo && echo A entry=%entry% skip=%skip% year=%year% month=%month% day=%day% date=%date%
-if %~2==echo && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && echo
-if not %skip%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' skip=%skip%" && set result= && goto :eof
-if %~2==echo && echo B entry=%entry% skip=%skip% ENTRY=%ENTRY% date=%date% && pause
+if "%~2"=="echo" && echo A entry=%entry% skip=%skip% year=%year% month=%month% day=%day% date=%date%
+if "%~2"=="echo" && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && echo
+if not %skip%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" skip=%skip%" && set result= && goto :eof
+if "%~2"=="echo" && echo B entry=%entry% skip=%skip% ENTRY=%ENTRY% date=%date% && pause
 if exist skip && raw cat --skip=%entry% --locate="%ENTRY%" --length=11 %device%%0+%devsect% > nul &; raw write --offset=%skip% %device%%0+%devsect% %date% > nul && set result=1
-if %~2==echo && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && pause
-if %~2==echo && echo C result=%result%
+if "%~2"=="echo" && raw cat --hex --skip=%entry% --length=32 %device%%0+%devsect% && pause
+if "%~2"=="echo" && echo C result=%result%
 endlocal && set result=%result%
 goto :eof
 
@@ -844,39 +849,39 @@ if %c%<=%n% && goto :readcharchecksumloop
 calc 314159269*%checksum% ;; set /A temp1=%@retval%
 #SAME RESULT#calc 314159269*%checksum% &; set /A temp1=%@retval%&0xffffffff
 #BAD?#set /A temp1=314159269*%checksum%&0xffffffff
-if /i %~2==echo && echo 1 temp1=%temp1%
+if /i "%~2"=="echo" && echo 1 temp1=%temp1%
 if %temp1%<=0 && set /A temp1=-1*%temp1%
-if /i %~2==echo && echo 2 temp1=%temp1%
+if /i "%~2"=="echo" && echo 2 temp1=%temp1%
 set /A temp2=1152921497*%temp1%&0xffffffffffffffff>>60
-if /i %~2==echo && echo 3 temp2=%temp2%
+if /i "%~2"=="echo" && echo 3 temp2=%temp2%
 set /A temp3=1000000007*%temp2%
-if /i %~2==echo && echo 4 temp3=%temp3%
+if /i "%~2"=="echo" && echo 4 temp3=%temp3%
 set /A temp=%temp1%-%temp3%
-if /i %~2==echo && echo 5 temp=%temp%
+if /i "%~2"=="echo" && echo 5 temp=%temp%
 set checksum=%temp%
-if /i %~2==echo && echo checksum=%checksum%
+if /i "%~2"=="echo" && echo checksum=%checksum%
 set /A nibble0=%checksum%&0xf000>>12
-if /i %~2==echo && echo nibble0=%nibble0%
+if /i "%~2"=="echo" && echo nibble0=%nibble0%
 set /A nibble1=%checksum%&0x0f00>>4
-if /i %~2==echo && echo nibble1=%nibble1%
+if /i "%~2"=="echo" && echo nibble1=%nibble1%
 set /A nibble2=%checksum%&0x00f0<<4
-if /i %~2==echo && echo nibble2=%nibble2%
+if /i "%~2"=="echo" && echo nibble2=%nibble2%
 set /A nibble3=%checksum%&0x000f<<12
-if /i %~2==echo && echo nibble3=%nibble3%
+if /i "%~2"=="echo" && echo nibble3=%nibble3%
 set /A checksum=%nibble3%+%nibble2%+%nibble1%+%nibble0%
 set checksum=0000%checksum:~2%
 set checksum=%checksum:~-4,4%
-if /i %~2==echo && echo Final checksum=%checksum%
+if /i "%~2"=="echo" && echo Final checksum=%checksum%
 endlocal && set lfnhash=%checksum%
 goto :eof
 
 :issfnattrib
 if "%~1"=="" && goto :eof
 setlocal
-set entry=%~1 &; cat --hex --skip=%entry% --length=16 %device%%0+%devsect% | set hexentry=
+set entry=%~1 &; raw cat --hex --skip=%entry% --length=16 %device%%0+%devsect% | set hexentry=
 cat --hex --skip=0 --length=16 (md)%mdbase%+1 | set mementry=
 if not "%hexentry:~9,52%"=="%mementry:~9,52%" && endlocal && set issfndir= && set issfnreo && echo Entry %entry% of %name%%%ext% not found" && goto :eof
-if %~2==echo && if "%hexentry:~9,52%"=="%mementry:~9,52%" && echo Entry %entry% is in memory ! endlocal && set issfndir= && set issfnreo && echo Entry %entry% of %name%%%ext% not found" && goto :eof
+if "%~2"=="echo" && if "%hexentry:~9,52%"=="%mementry:~9,52%" && echo Entry %entry% is in memory ! endlocal && set issfndir= && set issfnreo && echo Entry %entry% of %name%%%ext% not found" && goto :eof
 if %mode%==issfndir && call :attributes "%~2" &; if %d%==d && set issfndir=1 ! set issfndir=0
 if %mode%==issfnreadonly && call :attributes "%~2" &; if %r%==r && set issfnreo=1 ! set issfnreo=
 endlocal && set issfndir=%issfndir% && set issfnreo=%issfnreo%
@@ -907,7 +912,7 @@ endlocal && set result=%result%
 goto :eof
 
 :attributes
-if %~2==echo && echo %0 %*
+if "%~2"=="echo" && echo %0 %*
 setlocal
 set /A address=%basemem%+0xB &; read %address% ;; set /A attrib=%@retval%&0xff
 if not exist attrib && endlocal && set result= && set entry= && goto :eof
@@ -916,13 +921,13 @@ if %bit0%==1 && set r=r ;; if %bit1%==1 && set h=h ;; if %bit2%==1 && set s=s ;;
 if not %mode%==setattrib && if not %mode%==setlabelattrib && endlocal && set r=%r% && set s=%s% && set h=%h% && set v=%v% && set d=%d% && set a=%a% && goto :eof
 if not /i %filesys%==fat32 && if not %entry%>=%root% && endlocal && set result= && set entry= && goto :eof
 if /i %filesys%==fat32 && if not %entry%>=%dataarea% && endlocal && set result= && set entry= && goto :eof
-call Fn.11 "%~1" "a" || call Fn.11 "%~1" "r" || call Fn.11 "%~1" "s" || call Fn.11 "%~1" "h" || endlocal && set result= && set "message=Attribute(s) '%~1' not set" && goto :eof
-call Fn.11 "%~1" "-+" && endlocal && set result= && set "message=Attribute(s) '%~1' not set" && set entry= && goto :eof
-call Fn.11 "%~1" "+-" && endlocal && set result= && set "message=Attribute(s) '%~1' not set" && set entry= && goto :eof
+call Fn.11 "%~1" "a" || call Fn.11 "%~1" "r" || call Fn.11 "%~1" "s" || call Fn.11 "%~1" "h" || endlocal && set result= && set "message=Attribute(s) "%~1" not set" && goto :eof
+call Fn.11 "%~1" "-+" && endlocal && set result= && set "message=Attribute(s) "%~1" not set" && set entry= && goto :eof
+call Fn.11 "%~1" "+-" && endlocal && set result= && set "message=Attribute(s) "%~1" not set" && set entry= && goto :eof
 if %mode%==setlabelattrib && if %v%==v && call Fn.11 "%~1" "-a" && set bit5=0 && set changed=Y
 if %mode%==setlabelattrib && if %v%==v && call Fn.11 "%~1" "+a" && set bit5=1 && set changed=Y
-if %~2==echo && echo mode=%mode% entry=%entry% ENTRY=%ENTRY% v=%v% labeltyp=%labeltyp% bit5=%bit5% && pause
-if %mode%==setattrib && if %v%==v && if not %changed%==Y && echo -e $[0x07]%ENTRY% | set ENTRY= &; endlocal && set result= && set "message=Volume label '%ENTRY%' found: attributes 'A' 'R' 'S' 'H' can not be changed on '%device%%%path%%%name%%%ext%'" && set entry= && goto :eof
+if "%~2"=="echo" && echo mode=%mode% entry=%entry% ENTRY=%ENTRY% v=%v% labeltyp=%labeltyp% bit5=%bit5% && pause
+if %mode%==setattrib && if %v%==v && if not %changed%==Y && echo -e $[0x07]%ENTRY% | set ENTRY= &; endlocal && set result= && set "message=Volume label "%ENTRY%" found: attributes 'A' 'R' 'S' 'H' can not be changed on "%device%%%path%%%name%%%ext%"" && set entry= && goto :eof
 if not %v%==v && call Fn.11 "%~1" "+a" && set bit5=1 && set changed=Y
 if not %v%==v && call Fn.11 "%~1" "-a" && set bit5=0 && set changed=Y
 if not %v%==v && call Fn.11 "%~1" "+r" && set bit0=1 && set changed=Y
@@ -933,16 +938,16 @@ if not %v%==v && call Fn.11 "%~1" "+h" && set bit1=1 && set changed=Y
 if not %v%==v && call Fn.11 "%~1" "-h" && set bit1=0 && set changed=Y
 if %changed%==Y && set /a bit0=1*%bit0% ;; set /a bit1=2*%bit1% ;; set /a bit2=4*%bit2% ;; set /a bit3=8*%bit3% ;; set /a bit4=16*%bit4% ;; set /a bit5=32*%bit5% ;; set /a bit6=64*%bit6%
 if %changed%==Y && set /A addattr2=%bit0%+%bit1%+%bit2%+%bit3%+%bit4%+%bit5%+%bit6%
-if not %entry%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' entry=%entry%" && set entry= && set result= && goto :eof
-if %~2==echo && echo %0 entry=%entry% ENTRY=%ENTRY% && pause
-if %changed%==Y && set /A attentry=%entry%+0xB &; cat --skip=%entry% --locate=%ENTRY% --length=11 %device%%0+%devsect% > nul && raw write --offset=%attentry% %device%%0+%devsect% \x%addattr2:~2% > nul && set result=1
-if %~2==echo && echo Written attributes to address attentry=%attentry% Value: addattr2=%addattr2% result=%result% && pause
+if not %entry%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" entry=%entry%" && set entry= && set result= && goto :eof
+if "%~2"=="echo" && echo %0 entry=%entry% ENTRY=%ENTRY% && pause
+if %changed%==Y && set /A attentry=%entry%+0xB &; raw cat --skip=%entry% --locate=%ENTRY% --length=11 %device%%0+%devsect% > nul && raw write --offset=%attentry% %device%%0+%devsect% \x%addattr2:~2% > nul && set result=1
+if "%~2"=="echo" && echo Written attributes to address attentry=%attentry% Value: addattr2=%addattr2% result=%result% && pause
 endlocal && set result=%result% && set addattr2=%addattr2% && set "message=%message%"
 goto :eof
 
 :dellfnfile
 setlocal
-if not %~1==echo if not %~2==echo || set echo=echo
+if not "%~1"=="echo" if not "%~2"=="echo" || set echo=echo
 set "lfn=%name%%%ext%" &; set "lfn=%lfn%" &; set /a lfnlen=%@retval% &; if %lfnlen%>=256 && endlocal && set result= && set "message=LFN above 255 chars" && goto :eof
 #NOTOKE#set SFN= && call :checksfn "%name%%%ext%" &; if not %SFN%==N && endlocal && set "message=%name%%%ext% is SFN" && goto :eof
 setlocal && set mode=getsfnpath &; call :findpath "%path%" "%echo%" &; endlocal && set sfnpath=%sfnpath% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set success=%success% && set chainlen=%chainlen% &; if not exist sfnpath && endlocal && set "message=sfnpath not found" && goto :eof
@@ -967,19 +972,19 @@ set /a lfnnumC=%n%-%lfnnumA%-%lfnnumB% &; set /a lfnnumD=%lfnnumC%+%lfnnumB%
 if %echo%==echo && echo 5 lfn=%lfn% lfnlen=%lfnlen% n=%n% lfnentry=%lfnentry% lfnent01=%lfnent01% lfnnumA=%lfnnumA% lfnnumB=%lfnnumB%
 if %echo%==echo && echo lfnentry=%lfnentry% lfnnumC=%lfnnumC% lfnbyteB=%lfnbyteB% lfnnumB=%lfnnumB% lfnbyteA=%lfnbyteA% lfnnumA=%lfnnumA% lfnent01=%lfnent01%
 if %echo%==echo && if exist lfnentry && raw cat --hex --skip=%lfnentry% --length=96 %device%%0+%devsect%
-if /i %filesys%==FAT32 && if not %lfnentry%>=%dataarea% && endlocal && set "message=Something went wrong in function '%mode%'" && set lfnentry= && goto :eof
-if not /i %filesys%==FAT32 && if not %lfnentry%>=%root% && endlocal && set "message=Something went wrong in function '%mode%'" && set lfnentry= && goto :eof
-if not %lfnentry%>=%bytedone% && endlocal && set "message=Something went wrong in function '%mode%'" && set lfnentry= && goto :eof
+if /i %filesys%==FAT32 && if not %lfnentry%>=%dataarea% && endlocal && set "message=Something went wrong in function "%mode%"" && set lfnentry= && goto :eof
+if not /i %filesys%==FAT32 && if not %lfnentry%>=%root% && endlocal && set "message=Something went wrong in function "%mode%"" && set lfnentry= && goto :eof
+if not %lfnentry%>=%bytedone% && endlocal && set "message=Something went wrong in function "%mode%"" && set lfnentry= && goto :eof
 if %echo%==echo && echo 6 lfnentry=%lfnentry% c=%c% n=%n% lfnnumC=%lfnnumC% lfnnumB=%lfnnumB% lfnnumA=%lfnnumA%
 if %echo%==echo && echo Delete %device%%%path%%%name%%%ext%?
 if %echo%==echo && set /p /u "delete= Y/N > " && echo
 if %echo%==echo && if not %delete%==Y && endlocal && goto :eof
 set delentry=%lfnentry% && set /A ordinal=%n%+0x40
 :dellfnloop
-if not %delentry%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' delentry=%delentry%" && set lfnentry= && goto :eof
+if not %delentry%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" delentry=%delentry%" && set lfnentry= && goto :eof
 if exist lfnnumB && if %lfnnumB%>=1 && if %c%==%lfnnumC% && set delentry=%lfnbyteB% && set /a lfnnumC=%lfnnumC%+%lfnnumB% && set lfnnumB=
 if exist lfnnumA && if %lfnnumA%>=1 && if %c%==%lfnnumD% && set delentry=%lfnbyteA% && set /a lfnnumC=%lfnnumC%+%lfnnumA% && set lfnnumA=
-if not %echo%==echo && if exist delentry && set written= && set /A attentry=%delentry%+0xB &; cat --skip=%delentry% --locate=\x%ordinal:~2% --length=1 %device%%0+%devsect% > nul && cat --skip=%attentry% --locate=\x0F --length=1 %device%%0+%devsect% > nul && set check=Y && raw write --offset=%delentry% %device%%0+%devsect% \xE5 > nul && set written=Y && set w=0 && set /a c=%c%+1 && if not %ordinal%<=%n% && set ordinal=%n%
+if not %echo%==echo && if exist delentry && set written= && set /A attentry=%delentry%+0xB &; raw cat --skip=%delentry% --locate=\x%ordinal:~2% --length=1 %device%%0+%devsect% > nul && raw cat --skip=%attentry% --locate=\x0F --length=1 %device%%0+%devsect% > nul && set check=Y && raw write --offset=%delentry% %device%%0+%devsect% \xE5 > nul && set written=Y && set w=0 && set /a c=%c%+1 && if not %ordinal%<=%n% && set ordinal=%n%
 if not %check%==Y && endlocal && set "message=Abort: bad delete-lfn! No E5 written to %delentry%, first byte not expected %ordinal%, or %attentry% not 0F; check or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
 if %echo%==echo && if exist delentry && set written= &; raw write --offset=%delentry% %device%%0+%devsect% \xE5 > nul && echo E5 written to %delentry% && set written=Y && set w=0 && set /a c=%c%+1
 if %echo%==echo && echo 6 delentry=%delentry% c=%c% n=%n% lfnbyteB=%lfnbyteB% lfnbyteA=%lfnbyteA% lfnent01=%lfnent01% lfnnumC=%lfnnumC% lfnnumB=%lfnnumB% lfnnumA=%lfnnumA%
@@ -994,7 +999,7 @@ goto :dellfnfileloop
 
 :makelfnfile
 setlocal
-if not %~2==echo if not %~3==echo || set echo=echo
+if not "%~2"=="echo" if not "%~3"=="echo" || set echo=echo
 set /u sfnfile=%~1 &; set /u sfnname=%~n1 &; set /u sfnext=%~x1
 if not exist sfnfile && endlocal && set "message=Parameter Short File Name not exist" && goto :eof
 #NOTOKE#set SFN= && call :checksfn "%name%%%ext%" &; if not %SFN%==N && endlocal && set "message=%name%%%ext% is SFN" && goto :eof
@@ -1007,7 +1012,8 @@ if "%path%"=="/" && set clusnum=2
 if %echo%==echo && echo 0 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% sfnentry=%sfnentry% entry=%entry% ENTRY=%ENTRY% success=%success% name=%name% ext=%ext%
 if %echo%==echo && echo device=%device% sfnpath=%sfnpath% sfnfile=%sfnfile%
 if %echo%==echo && echo 1 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% success=%success% checksum=%checksum% && pause
-setlocal && set mode=getlfnentry && set entry= && call :findsfn "%name%%%ext%" "file" "%echo%" &; if not exist lfnentry && endlocal ! endlocal && endlocal && set "message=Directory-entry %device%%%path%%%sfnfile% exists already" && set lfnentry= && goto :eof
+setlocal && set mode=getlfnentry && set entry= && call :findsfn "%name%%%ext%" "file" "%echo%" &; if not exist lfnentry && endlocal ! endlocal && endlocal && set "message=Directory-entry "%device%%%path%%%name%%%ext%" exists already" && set lfnentry= && goto :eof
+#BAD#setlocal && set mode=getlfnentry && set entry= && call :findsfn "%name%%%ext%" "file" "%echo%" &; if not exist lfnentry && endlocal ! endlocal && endlocal && set "message=Directory-entry %device%%%path%%%sfnfile% exists already" && set lfnentry= && goto :eof
 setlocal && set mode=getsfnentry && set name=%sfnname% && set ext=%sfnext% && set path=%sfnpath% &; call :findfile %name%%%ext% "%echo%" &; endlocal && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set sfnentry=%entry% && set ENTRY=%ENTRY% && set success=%success% &; if not exist sfnentry && endlocal && set "message=sfnentry not found" && set lfnentry= && goto :eof
 if %echo%==echo && echo 2 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% sfnentry=%sfnentry% entry=%entry% ENTRY=%ENTRY% success=%success% name=%name% ext=%ext%
 if not exist clusnum && endlocal && set "message=clusnum not found" && set lfnentry= && goto :eof ;; if not exist bytedone && endlocal && set "message=bytedone not found" && set lfnentry= && goto :eof ;; if not exist sfnentry && endlocal && set "message=sfnentry not found" && set lfnentry= && goto :eof
@@ -1026,7 +1032,7 @@ set lfnentry= && set lastclus=%clusnum% &; setlocal && set /a n=%n%+1 &; call :d
 if %echo%==echo && echo B lastclus=%lastclus% clusnum=%clusnum% lfnentry=%lfnentry% endentry=%endentry% bytedone=%bytedone% dirlen=%dirlen% n=%n% numentry=%numentry% && pause
 if not exist lfnentry && set clusnum=%lastclus% &; setlocal && call :freeentry "%clusnum%" "%bytedone%" "%dirlen%" "%echo%" &; if exist result && endlocal && set lfnentry=%result% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set endentry=%endentry% && set clusnum=%clusnum% && set lastclus=%lastclus% && set numentry=%numentry% && set ASCII=%ASCII% ! if not exist message && endlocal && set ASCII=%ASCII% ! endlocal && endlocal && set "message=%message%" && goto :eof
 if %echo%==echo && echo C lastclus=%lastclus% clusnum=%clusnum% lfnentry=%lfnentry% endentry=%endentry% bytedone=%bytedone% dirlen=%dirlen% n=%n% numentry=%numentry% && pause
-if not %n%<=%numentry% && if %bytedone%>=%dataarea% && setlocal && call :lastcluster "%echo%" &; if exist message && endlocal && endlocal && set result= && set "message=Length of cluster-chain above 2MB" && set lfnentry= && goto :eof ! if not exist result && endlocal && endlocal && set result= && set "message=Abort: free cluster not found" && set lfnentry= && goto :eof ! endlocal
+if not %n%<=%numentry% && if %bytedone%>=%dataarea% && setlocal && call :lastcluster "%echo%" &; if exist message && endlocal && endlocal && set result= && set "message=Length of cluster-chain above 2MB" && set lfnentry= && goto :eof ! if not exist result && endlocal && endlocal && set result= && set "message=Abort: free clusters at FAT-end not found" && set lfnentry= && goto :eof ! endlocal
 if %echo%==echo && echo D lastclus=%lastclus% clusnum=%clusnum% lfnentry=%lfnentry% endentry=%endentry% bytedone=%bytedone% dirlen=%dirlen% n=%n% numentry=%numentry% && pause
 if not exist lfnentry && if %bytedone%>=%dataarea% && set clusnum=%lastclus% && call :adddircluster "%echo%" &; if %clusnum%>=2 && set lfnentry=%bytedone% && set /A endentry=%bytedone%+%dirlen%-0x20 && set lastclus=%clusnum%
 if %echo%==echo && echo E lastclus=%lastclus% clusnum=%clusnum% lfnentry=%lfnentry% endentry=%endentry% bytedone=%bytedone% dirlen=%dirlen%
@@ -1036,7 +1042,7 @@ if not exist lfnentry && endlocal && set result= && set "message=lfnentry not fo
 set lfnbyteC=%lfnentry% && set lfnbyte0=%lfnentry%
 if %echo%==echo && echo G sfnentry=%sfnentry% lfnentry=%lfnentry% endentry=%endentry% bytedone=%bytedone% clusnum=%clusnum% lastclus=%lastclus% root=%root% dataarea=%dataarea% checksum=%checksum%
 setlocal && set name=%sfnname% && set ext=%sfnext% &; call :sfnchecksum &; endlocal && set checksum=%checksum%
-if not %lfnentry%>=%bytedone% && endlocal && set "message=Something went wrong in function '%mode%' lfnentry=%lfnentry%" && set lfnentry= && goto :eof
+if not %lfnentry%>=%bytedone% && endlocal && set "message=Something went wrong in function "%mode%" lfnentry=%lfnentry%" && set lfnentry= && goto :eof
 if %echo%==echo && echo H checksum=%checksum%
 if %echo%==echo && echo Make %device%%%path%%%name%%%ext% for %sfnfile% ?
 if %echo%==echo && set /p /u "make= Y/N > " && echo
@@ -1049,7 +1055,7 @@ if not exist lfnentry && endlocal && set result= && set "message=Abort: new lfne
 if %echo%==echo && echo I lfnentry=%lfnentry% c=%c% s=%s% lfn=%lfn% LFN=%LFN%
 set writelfn=1 && set success=
 :writelfnloop
-if not %lfnentry%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' lfnentry=%lfnentry%" && set lfnentry= && goto :eof
+if not %lfnentry%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" lfnentry=%lfnentry%" && set lfnentry= && goto :eof
 cat --skip=%lfnentry% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul && set check=Y && raw write --offset=%lfnentry% %device%%0+%devsect% %LFN% > nul && set success=Y
 if not %check%==Y && endlocal && set "message=Abort: bad lfn-write! Not written to %lfnentry%, first byte not expected %ASCII%; check lfnbyteA=%lfnentryA% lfnbyteB=%lfnentryB% lfnbyteC=%lfnentryC% lfnent01=%lfnent01% or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
 if not %success%==Y && if not %writelfn%<=7 && endlocal && set "message=Abort: bad lfn-write! Written %c% from %n% entries, latest to %lfnentry% Check from, and delete manually (write E5 to first byte) offset on disk/ partition: lfnbyteA=%lfnentryA% lfnbyteB=%lfnentryB% lfnbyteC=%lfnentryC% lfnent01=%lfnent01% or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
@@ -1062,22 +1068,22 @@ if not %entry%<=%endentry% && if %bytedone%>=%dataarea% && set clusnum=%lastclus
 if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && echo -n > (md)%mdbase%+1
 set writelfn= && set writesfn=1 && set success= && set check=
 :writesfnfileloop1
-if not %sfnentry%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' sfnentry=%sfnentry%" && set lfnentry= && goto :eof
-if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && cat --skip=%sfnentry% --locate=%ENTRY% --length=11 %device%%0+%devsect% > nul && set check=Y && raw dd if=%device%%0+%devsect% of=(md)%mdbase%+1 bs=0x1 count=0x20 skip=%sfnentry% seek=0x0 > nul && set success=Y
+if not %sfnentry%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" sfnentry=%sfnentry%" && set lfnentry= && goto :eof
+if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && raw cat --skip=%sfnentry% --locate=%ENTRY% --length=11 %device%%0+%devsect% > nul && set check=Y && raw dd if=%device%%0+%devsect% of=(md)%mdbase%+1 bs=0x1 count=0x20 skip=%sfnentry% seek=0x0 > nul && set success=Y
 if not %check%==Y && endlocal && set "message=Abort: bad sfn-write! Not written to %sfnentry%, %ENTRY% not found, check or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
 if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && if not %success%==Y && if not %writesfn%<=7 && endlocal && set "message=Abort: bad sfn2mem-copy! Written %c% from %n% entries, latest to %lfnentry% Check from, and delete manually (write E5 to first byte) offset on disk/ partition: lfnbyteA=%lfnentryA% lfnbyteB=%lfnentryB% lfnbyteC=%lfnentryC% lfnent01=%lfnent01% or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
 if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && if not %success%==Y && if %writesfn%<=7 && set /a writesfn=%writesfn%+1 &; echo copy %writesfn% sfn2mem && set check= && goto :writesfnfileloop1
 set writelfn= && set writesfn=1 && set success= && set check=
 :writesfnfileloop2
-if not %sfnentry%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' sfnentry=%sfnentry%" && set lfnentry= && goto :eof
-if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && cat --skip=%entry% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul && set check=Y && raw dd if=(md)%mdbase%+1 of=%device%%0+%devsect% bs=0x1 count=0x20 skip=0x0 seek=%entry% > nul && set success=Y
+if not %sfnentry%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" sfnentry=%sfnentry%" && set lfnentry= && goto :eof
+if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && raw cat --skip=%entry% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul && set check=Y && raw dd if=(md)%mdbase%+1 of=%device%%0+%devsect% bs=0x1 count=0x20 skip=0x0 seek=%entry% > nul && set success=Y
 if not %check%==Y && endlocal && set "message=Abort: bad sfn-write! %ENTRY% not written to %entry%, expected first byte %ASCII% not found, check or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
 if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && if not %success%==Y && if not %writesfn%<=7 && endlocal && set "message=Abort: bad mem2sfn2-copy! Written %c% from %n% entries, latest to %lfnentry% Check from, and delete manually (write E5 to first byte) offset on disk/ partition: lfnbyteA=%lfnentryA% lfnbyteB=%lfnentryB% lfnbyteC=%lfnentryC% lfnent01=%lfnent01% or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
 if exist sfnentry && if exist entry && if not %sfnentry%==%entry% && if not %success%==Y && if %writesfn%<=7 && set /a writesfn=%writesfn%+1 &; echo copy %writesfn% sfn2disk && set check= && goto :writesfnfileloop2
 set writesfn= && set delsfn=1 && set success= && set check=
 :delsfnfileloop
-if not %sfnentry%>=0x200 && endlocal && set "message=Something went wrong in function '%mode%' sfnentry=%sfnentry%" && set lfnentry= && goto :eof
-if exist sfnentry && if not %sfnentry%==%entry% && cat --skip=%sfnentry% --locate=%ENTRY% --length=11 %device%%0+%devsect% > nul && set check=Y && raw write --offset=%sfnentry% %device%%0+%devsect% \xE5 > nul && set success=Y
+if not %sfnentry%>=0x200 && endlocal && set "message=Something went wrong in function "%mode%" sfnentry=%sfnentry%" && set lfnentry= && goto :eof
+if exist sfnentry && if not %sfnentry%==%entry% && raw cat --skip=%sfnentry% --locate=%ENTRY% --length=11 %device%%0+%devsect% > nul && set check=Y && raw write --offset=%sfnentry% %device%%0+%devsect% \xE5 > nul && set success=Y
 if not %check%==Y && endlocal && set "message=Abort: bad sfn-del! %ENTRY% not found on %entry%, check or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
 if exist sfnentry && if not %sfnentry%==%entry% && if not %success%==Y && if not %delsfn%<=7 && endlocal && set "message=Abort: original sfn-entry not deleted! Check from, and delete manually (write E5 to first byte) offset on disk/ partition: %sfnentry% or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
 if exist sfnentry && if not %sfnentry%==%entry% && if not %success%==Y && if %delsfn%<=7 && set /a delsfn=%delsfn%+1 &; echo write %delsfn% E5 && set check= && goto :delsfnfileloop
@@ -1091,148 +1097,152 @@ goto :eof
 
 :lastcluster
 setlocal && set result=
-if /i %filesys%==fat12 && set /A fatend=%numclus% / 2 + %numclus% + %fat1% - 2 && set clus2len=6 ! if /i %filesys%==fat16 && set /A fatend=%numclus% * 2 + %fat1% && set clus2len=4 ! if /i %filesys%==fat32 && set /A fatend=%numclus% * 4 + %fat1% && set clus2len=8
-if %~1==echo && echo %0 filesys=%filesys% numclus=%numclus% fat1=%fat1% fatend=%fatend% fat2=%fat2% root=%root% dataarea=%dataarea% clus2len=%clus2len%
-raw cat --skip=%fatend% --locate=\x00 --length=%clus2len% %device%%0+%devsect% > nul &; set /a result=%@retval% &; if %result%==%clus2len% && set result=Y
-if %result%==Y && setlocal && set /a chainmax=chainlen+%clussize%+%clussize% &; if %chainmax%>=2m && echo chainmax=%chainmax% && endlocal && set result= && set "message=Length of cluster-chain above 2MB" ! endlocal
-if %~1==echo && echo result=%result%
-if %~1==echo && raw cat --hex --skip=%fatend% --length=32 %device%%0+%devsect% && pause
+if /i %filesys%==fat12 && set /A offset=%numclus% / 2 + %numclus% + %fat1% - 2 && set clus2len=6 ! if /i %filesys%==fat16 && set /A offset=%numclus% * 2 + %fat1% && set clus2len=4 ! if /i %filesys%==fat32 && set /A offset=%numclus% * 4 + %fat1% && set clus2len=8
+#ORG#if /i %filesys%==fat12 && set /A fatend=%numclus% / 2 + %numclus% + %fat1% - 2 && set clus2len=6 ! if /i %filesys%==fat16 && set /A fatend=%numclus% * 2 + %fat1% && set clus2len=4 ! if /i %filesys%==fat32 && set /A fatend=%numclus% * 4 + %fat1% && set clus2len=8
+if "%~1"=="echo" && echo %0 filesys=%filesys% numclus=%numclus% fat1=%fat1% offset=%offset% fat2=%fat2% root=%root% dataarea=%dataarea% clus2len=%clus2len%
+raw cat --skip=%offset% --locate=\x00 --length=%clus2len% %device%%0+%devsect% > nul &; set /a result=%@retval% &; if %result%==%clus2len% && set result=Y ! set result=
+#BAD#raw cat --skip=%fatend% --locate=\x00 --length=%clus2len% %device%%0+%devsect% > nul &; set /a result=%@retval% &; if %result%==%clus2len% && set result=Y
+if %result%==Y && setlocal && set /a chainmax=%chainlen%+%clussize%+%clussize% &; if %chainmax%>=2m && echo chainmax=%chainmax% && endlocal && set result= && set "message=Length of cluster-chain above 2MB" ! endlocal
+#BAD#if %result%==Y && setlocal && set /a chainmax=chainlen+%clussize%+%clussize% &; if %chainmax%>=2m && echo chainmax=%chainmax% && endlocal && set result= && set "message=Length of cluster-chain above 2MB" ! endlocal
+if "%~1"=="echo" && echo result=%result%
+raw cat --hex --skip=%offset% --length=32 %device%%0+%devsect% && pause offset=%offset% result=%result%
+if "%~1"=="echo" && raw cat --hex --skip=%offset% --length=32 %device%%0+%devsect% && pause
 endlocal && set result=%result% && set "message=%message%"
 goto :eof
 
 :freeentry
 setlocal
-if %~4==echo && echo %0: %*
+if "%~4"=="echo" && echo %0: %*
 set clusnum=%~1 &; set bytedone=%~2 &; set /A endentry=%bytedone%+%~3-0x20 && set numentry=0 && set found=
 set ASCII=00
 :freeentryloop
-if %~4==echo && echo 0 clusnum=%clusnum% skipbyte=%skipbyte% endentry=%endentry% dataarea=%dataarea% bytedone=%bytedone% dirlen=%dirlen% && pause
+if "%~4"=="echo" && echo 0 clusnum=%clusnum% skipbyte=%skipbyte% endentry=%endentry% dataarea=%dataarea% bytedone=%bytedone% dirlen=%dirlen% && pause
 raw cat --skip=%endentry% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul && set found=Y
-if %~4==echo && echo 1 found=%found% clusnum=%clusnum% skipbyte=%skipbyte% endentry=%endentry% dataarea=%dataarea% bytedone=%bytedone% dirlen=%dirlen% && pause
+if "%~4"=="echo" && echo 1 found=%found% clusnum=%clusnum% skipbyte=%skipbyte% endentry=%endentry% dataarea=%dataarea% bytedone=%bytedone% dirlen=%dirlen% && pause
 if not %found%==Y && if exist clusnum && if not %clusnum%==0 && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && set lastclus=%clusnum% && call :lookupFAT "%clusnum%" "%~4" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; set skipbyte=%bytedone% && set /A endentry=%bytedone%+%dirlen%-0x20 && set lastclus=%clusnum% && goto :freeentryloop
-if %~4==echo && echo 2 clusnum=%clusnum% skipbyte=%skipbyte% endentry=%endentry% && pause
+if "%~4"=="echo" && echo 2 clusnum=%clusnum% skipbyte=%skipbyte% endentry=%endentry% && pause
 if %clusnum%==0 && endlocal && set result= && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set numentry=%numentry% && set lastclus=%lastclus% && set endentry=%endentry% && set ASCII=%ASCII% && goto :eof
 if %found%==Y && set found= && set /A search=%dirlen%-0x10 && set offset=%bytedone%
 :get16ASCIIloop
-if %~4==echo && echo 3 offset=%offset% skipbyte=%skipbyte% search=%search% endentry=%endentry% dataarea=%dataarea% bytedone=%bytedone% dirlen=%dirlen% clusnum=%clusnum% && pause
+if "%~4"=="echo" && echo 3 offset=%offset% skipbyte=%skipbyte% search=%search% endentry=%endentry% dataarea=%dataarea% bytedone=%bytedone% dirlen=%dirlen% clusnum=%clusnum% && pause
 if exist search && set skipbyte= &; raw cat --skip=%offset% --locate=\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII% --length=%search% --number=1 %device%%0+%devsect% | set skipbyte= &; if exist skipbyte && if 0x%skipbyte%>=%offset% && set /A skipbyte=0x%skipbyte% && set found=Y &; calc 0x%skipbyte:~-2,2% % 0x20 &; set /A skipbyte=%skipbyte%-%@retval%+0x20 &; if not %skipbyte%<=%endentry% && set found= && set skipbyte=
 #ORG#if exist search && set skipbyte= &; raw cat --skip=%offset% --locate=\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII%\x%ASCII% --length=%search% --number=1 %device%%0+%devsect% | set skipbyte= &; if exist skipbyte && set /A skipbyte=0x%skipbyte% && set found=Y &; calc 0x%skipbyte:~-2,2% % 0x20 &; set /A skipbyte=%skipbyte%-%@retval%+0x20 &; if not %skipbyte%<=%endentry% && set found= && set skipbyte=
 if %found%==Y && if exist skipbyte && if %skipbyte%>=%bytedone% && raw cat --skip=%skipbyte% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul || set found= && set /A offset=%skipbyte%+0x20 && set /A search=%endentry%-%skipbyte%+0x10-0x20 && set skipbyte= && goto :get16ASCIIloop
 set search= && if not %found%==Y && raw cat --skip=%endentry% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul && set skipbyte=%endentry% && set found=Y
-if %~4==echo && echo 4 found=%founD% offset=%offset% skipbyte=%skipbyte% search=%search% endentry=%endentry% clusnum=%clusnum% && pause
+if "%~4"=="echo" && echo 4 found=%founD% offset=%offset% skipbyte=%skipbyte% search=%search% endentry=%endentry% clusnum=%clusnum% && pause
 :getfreeentryloop
 if exist skipbyte && if %found%==Y && if %skipbyte%<=%endentry% && set /a numentry=%endentry%+0x20-%skipbyte%/32
-if %~4==echo && if exist skipbyte && echo 5 numentry=%numentry% offset=%offset% skipbyte=%skipbyte% search=%search% endentry=%endentry% clusnum=%clusnum% lastclus=%lastclus%
+if "%~4"=="echo" && if exist skipbyte && echo 5 numentry=%numentry% offset=%offset% skipbyte=%skipbyte% search=%search% endentry=%endentry% clusnum=%clusnum% lastclus=%lastclus%
 if exist skipbyte && raw cat --skip=%skipbyte% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul || set skipbyte= && set clusnum=0 && set "message=Bad :freentry"
-if %~4==echo && if exist skipbyte && echo 6 numentry=%numentry% offset=%offset% skipbyte=%skipbyte% search=%search% endentry=%endentry% clusnum=%clusnum% lastclus=%lastclus%
-if %~4==echo && if exist skipbyte && raw cat --hex --skip=%skipbyte% --length=0x40 %device%%0+%devsect%
-if %~4==echo && echo Leaving %0 && pause
+if "%~4"=="echo" && if exist skipbyte && echo 6 numentry=%numentry% offset=%offset% skipbyte=%skipbyte% search=%search% endentry=%endentry% clusnum=%clusnum% lastclus=%lastclus%
+if "%~4"=="echo" && if exist skipbyte && raw cat --hex --skip=%skipbyte% --length=0x40 %device%%0+%devsect%
+if "%~4"=="echo" && echo Leaving %0 && pause
 endlocal && set result=%skipbyte% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set numentry=%numentry% && set lastclus=%lastclus% && set endentry=%endentry% && set "message=%message%" && set ASCII=%ASCII%
 goto :eof
 
 :delentry
-if %~4==echo && echo %0 mode=%mode% clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% root=%root% dataarea=%dataarea%
-if %~5==echo && echo %0 mode=%mode% clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% root=%root% dataarea=%dataarea%
+if "%~4"=="echo" && echo %0 mode=%mode% clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% root=%root% dataarea=%dataarea%
+if "%~5"=="echo" && echo %0 mode=%mode% clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% root=%root% dataarea=%dataarea%
 setlocal
 set numentry=0 && set found= && set E5=0 && set ASCII=E5 && if not %clusnum%>=2 && set clusnum=2
 if not "%~4"=="" && checkrange 2:21 calc %~4 && set delcon=%~4 && shift
 if %bytedone%>=%dataarea% && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% ! set /A bytedone=%root% && set /A dirlen=%dataarea%-%root%
 set /A endentry=%bytedone%+%dirlen%-0x20 && set offset=%bytedone% && set /A search=%dirlen%-0x10
-if %~4==echo && echo 1 E5=%E5% delcon=%delcon% offset=%offset% endentry=%endentry% dirlen=%dirlen% search=%search% && pause
+if "%~4"=="echo" && echo 1 E5=%E5% delcon=%delcon% offset=%offset% endentry=%endentry% dirlen=%dirlen% search=%search% && pause
 :delentryloop
-if %~4==echo && echo 1A E5=%E5% delcon=%delcon% clusnum=%clusnum% offset=%offset% skipbyte=%skipbyte% endentry=%endentry% search=%search% && pause
+if "%~4"=="echo" && echo 1A E5=%E5% delcon=%delcon% clusnum=%clusnum% offset=%offset% skipbyte=%skipbyte% endentry=%endentry% search=%search% && pause
 raw cat --skip=%offset% --locate=\x%ASCII% --length=%search% --number=1 %device%%0+%devsect% | set skipbyte= &; if exist skipbyte && if 0x%skipbyte%>=%offset% && set /A skipbyte=0x%skipbyte% &; calc 0x%skipbyte:~-2,2% % 0x20 &; set /A skipbyte=%skipbyte%-%@retval%+0x20 &; raw cat --skip=%skipbyte% --locate=\x00 --length=1 %device%%0+%devsect% > nul |; if %skipbyte%<=%endentry% && set offset=%skipbyte% && set /A search=%endentry%-%skipbyte%+0x10 && set skipbyte= && goto :delentryloop ! set skipbyte=
 #ORG#raw cat --skip=%offset% --locate=\x%ASCII% --length=%search% --number=1 %device%%0+%devsect% | set skipbyte= &; if exist skipbyte && set /A skipbyte=0x%skipbyte% &; calc 0x%skipbyte:~-2,2% % 0x20 &; set /A skipbyte=%skipbyte%-%@retval%+0x20 &; raw cat --skip=%skipbyte% --locate=\x00 --length=1 %device%%0+%devsect% > nul |; if %skipbyte%<=%endentry% && set offset=%skipbyte% && set /A search=%endentry%-%skipbyte%+0x10 && set skipbyte= && goto :delentryloop ! set skipbyte=
 if not %skipbyte%<=%endentry% && set skipbyte=
 if not exist skipbyte && raw cat --skip=%endentry% --locate=\x00 --length=1 %device%%0+%devsect% > nul && set clusnum=0
-if %~4==echo && echo 2 clusnum=%clusnum% E5=%E5% delcon=%delcon% offset=%offset% skipbyte=%skipbyte% endentry=%endentry% search=%search% && pause
+if "%~4"=="echo" && echo 2 clusnum=%clusnum% E5=%E5% delcon=%delcon% offset=%offset% skipbyte=%skipbyte% endentry=%endentry% search=%search% && pause
 if not exist skipbyte && if exist clusnum && if not %clusnum%==0 && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && set lastclus=%clusnum% && call :lookupFAT "%clusnum%" "%~4" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set dirlen=%clussize% &; set /A endentry=%bytedone%+%dirlen%-0x20 && set offset=%bytedone% && set /A search=%dirlen%-0x10 && set lastclus=%clusnum% && set E5=0 && goto :delentryloop
-if %~4==echo && echo 3 E5=%E5% delcon=%delcon% root=%root% dataarea=%dataarea% skipbyte=%skipbyte% endentry=%endentry% search=%search% && pause
-if %~4==echo && if exist skipbyte && raw cat --hex --skip=%skipbyte% --length=32 %device%%0+%devsect%
+if "%~4"=="echo" && echo 3 E5=%E5% delcon=%delcon% root=%root% dataarea=%dataarea% skipbyte=%skipbyte% endentry=%endentry% search=%search% && pause
+if "%~4"=="echo" && if exist skipbyte && raw cat --hex --skip=%skipbyte% --length=32 %device%%0+%devsect%
 if not exist skipbyte && endlocal && set result= && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set numentry=%numentry% && set lastclus=%lastclus% && set endentry=%endentry% && goto :eof
 :getdelentryloop
 if exist skipbyte && raw cat --skip=%skipbyte% --locate=\x00 --length=1 %device%%0+%devsect% > nul && endlocal && set result= && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set numentry=%numentry% && set lastclus=%lastclus% && set endentry=%endentry% && goto :eof
-if %~4==echo && echo 4 E5=%E5% delcon=%delcon% clusnum=%clusnum% skipbyte=%skipbyte% endentry=%endentry% search=%search%
-if %~4==echo && if exist skipbyte && if %E5%>=1 && raw cat --hex --skip=%skipbyte% --length=32 %device%%0+%devsect%
+if "%~4"=="echo" && echo 4 E5=%E5% delcon=%delcon% clusnum=%clusnum% skipbyte=%skipbyte% endentry=%endentry% search=%search%
+if "%~4"=="echo" && if exist skipbyte && if %E5%>=1 && raw cat --hex --skip=%skipbyte% --length=32 %device%%0+%devsect%
 if exist skipbyte && raw cat --skip=%skipbyte% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul || set found=N
 if %found%==N && if exist skipbyte && set /A offset=%skipbyte%+0x20 &; if %offset%<=%endentry% && set /A search=%endentry%-%skipbyte%+0x10 && set found= && set skipbyte= && set E5=0 && goto :delentryloop ! set skipbyte=
 if exist skipbyte && raw cat --skip=%skipbyte% --locate=\x00 --length=1 %device%%0+%devsect% > nul && set skipbyte= && set clusnum=0
-if %~4==echo && echo 5 E5=%E5% delcon=%delcon% clusnum=%clusnum% skipbyte=%skipbyte% search=%search%
+if "%~4"=="echo" && echo 5 E5=%E5% delcon=%delcon% clusnum=%clusnum% skipbyte=%skipbyte% search=%search%
 if %E5%>=1 && if exist skipbyte && raw cat --skip=%skipbyte% --locate=\x%ASCII% --length=1 %device%%0+%devsect% > nul || set found=N
 if exist delcon && if exist skipbyte && if not %E5%>=%delcon% && set /A skipbyte=%skipbyte%+0x20 &; set /A search=%endentry%-%skipbyte%+0x10 &; if not %found%==N && set /a E5=%E5%+1 ! if %skipbyte%<=%endentry% && set E5=0 && goto :getdelentryloop ! set E5=0 && set skipbyte=
-if %~4==echo && echo 6 E5=%E5% delcon=%delcon% skipbyte=%skipbyte% search=%search%
+if "%~4"=="echo" && echo 6 E5=%E5% delcon=%delcon% skipbyte=%skipbyte% search=%search%
 if exist delcon && if exist skipbyte && if %E5%>=1 && if not %E5%>=%delcon% &; if %skipbyte%<=%endentry% && set found= && goto :getdelentryloop ! set skipbyte=
-if %~4==echo && if %mode%==getdelentry && echo 7 E5=%E5% delcon=%delcon% skipbyte=%skipbyte%
+if "%~4"=="echo" && if %mode%==getdelentry && echo 7 E5=%E5% delcon=%delcon% skipbyte=%skipbyte%
 if not exist skipbyte && raw cat --skip=%endentry% --locate=\x00 --length=1 %device%%0+%devsect% > nul && set clusnum=0
 if not exist skipbyte && if exist clusnum && if not %clusnum%==0 && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && set lastclus=%clusnum% && call :lookupFAT "%clusnum%" "%~4" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; set /A endentry=%bytedone%+%dirlen%-0x20 && set offset=%bytedone% && set /A search=%dirlen%-0x10 && set lastclus=%clusnum% && set E5=0 && goto :delentryloop
 if exist skipbyte && if exist delcon &; if %E5%>=%delcon% && set /A skipbyte=-%delcon% * 0x20 + %skipbyte% && set numentry=%E5% && set E5= && set delcon= ! set skipbyte=
-if %~4==echo && echo 8 E5=%E5% numentry=%numentry% n=%n% dataarea=%dataarea% bytedone=%bytedone% endentry=%endentry% skipbyte=%skipbyte% search=%search% found=%found% clusnum=%clusnum% lastclus=%lastclus%
+if "%~4"=="echo" && echo 8 E5=%E5% numentry=%numentry% n=%n% dataarea=%dataarea% bytedone=%bytedone% endentry=%endentry% skipbyte=%skipbyte% search=%search% found=%found% clusnum=%clusnum% lastclus=%lastclus%
 if exist skipbyte && raw cat --skip=%skipbyte% --locate=\x%ASCII% --length=%search% --number=1 %device%%0+%devsect% > nul || set skipbyte=
-if %~4==echo && echo 9 E5=%E5% numentry=%numentry% n=%n% dataarea=%dataarea% bytedone=%bytedone% endentry=%endentry% skipbyte=%skipbyte% search=%search% found=%found% clusnum=%clusnum% lastclus=%lastclus%
-if %~4==echo && if exist skipbyte && raw cat --hex --skip=%skipbyte% --length=0xA0 %device%%0+%devsect% && pause
-if %~4==echo && echo Leaving :delentry && pause
+if "%~4"=="echo" && echo 9 E5=%E5% numentry=%numentry% n=%n% dataarea=%dataarea% bytedone=%bytedone% endentry=%endentry% skipbyte=%skipbyte% search=%search% found=%found% clusnum=%clusnum% lastclus=%lastclus%
+if "%~4"=="echo" && if exist skipbyte && raw cat --hex --skip=%skipbyte% --length=0xA0 %device%%0+%devsect% && pause
+if "%~4"=="echo" && echo Leaving :delentry && pause
 endlocal && set result=%skipbyte% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set numentry=%numentry% && set lastclus=%lastclus% && set endentry=%endentry% && set ASCII=%ASCII%
 goto :eof
 
 :adddircluster
 setlocal
-if %~1==echo && echo %0: fat1=%fat1% fat2=%fat2% numclus=%numclus% clusnum=%clusnum% lastclus=%lastclus%
-if %~1==echo && echo 1 %0: fat1=%fat1% fat2=%fat2% numclus=%numclus% clusnum=%clusnum% lastclus=%lastclus%
+if "%~1"=="echo" && echo %0: fat1=%fat1% fat2=%fat2% numclus=%numclus% clusnum=%clusnum% lastclus=%lastclus%
+if "%~1"=="echo" && echo 1 %0: fat1=%fat1% fat2=%fat2% numclus=%numclus% clusnum=%clusnum% lastclus=%lastclus%
 if exist clusnum && if not %clusnum%==0 && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && set lastclus=%clusnum% && call :lookupFAT "%clusnum%" "%~1" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; raw cat --skip=%bytedone% --locate=\x00 --length=1 %device%%0+%devsect% > nul && endlocal && set lastclus=%lastclus% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && goto :eof
-if %~1==echo && echo 2 %0: fat1=%fat1% fat2=%fat2% numclus=%numclus% clusnum=%clusnum% lastclus=%lastclus%
+if "%~1"=="echo" && echo 2 %0: fat1=%fat1% fat2=%fat2% numclus=%numclus% clusnum=%clusnum% lastclus=%lastclus%
 if not %clusnum%>=2 && set clusnum=%lastclus% &; if not %clusnum%>=2 && endlocal && set clusnum=0 && goto :eof
-if %~1==echo && set makeclus= &; set /p /u "makeclus= Add new cluster? Y/N > " && echo
-if %~1==echo && if not %makeclus%==Y && endlocal && set clusnum=0 && goto :eof
+if "%~1"=="echo" && set makeclus= &; set /p /u "makeclus= Add new cluster? Y/N > " && echo
+if "%~1"=="echo" && if not %makeclus%==Y && endlocal && set clusnum=0 && goto :eof
 set clusbyte= && set freebyte= && set freeclus= && set nextclus= && set fatsize= && set makeclus=
 if exist numclus &; if /i %filesys%==fat12 && set /A fatsize=%numclus% * 3 / 2 + 3 ! if /i %filesys%==fat16 && set /A fatsize=%numclus% * 4 + 4 ! if /i %filesys%==fat32 && set /A fatsize=%numclus% * 8 + 8
 if not exist fatsize &; if exist fat2 && set /A fatsize=%fat2%-%fat1% ! if exist root && set /A fatsize=%root%-fat1% ! if exist dataarea && set /A fatsize=%dataarea%-%fat1%
-if %~1==echo && echo 1 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% fatsize=%fatsize%
+if "%~1"=="echo" && echo 1 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% fatsize=%fatsize%
 if not exist fatsize && endlocal && set clusnum=0 && goto :eof
 if /i %filesys%%==fat12 && call :clustersfat12 "%~1" &; if not %freeclus%==0 && set clusnum=%freeclus% && set freeclus= ! endlocal && set clusnum=0 && goto :eof
 if /i %filesys%%==fat16 && call :clustersfat16 "%~1" &; if not %freeclus%==0 && set clusnum=%freeclus% && set freeclus= ! endlocal && set clusnum=0 && goto :eof
 if /i %filesys%%==fat32 && call :clustersfat32 "%~1" &; if not %freeclus%==0 && set clusnum=%freeclus% && set freeclus= ! endlocal && set clusnum=0 && goto :eof
 ## writing to FAT1: cluster number of freeclus and terminate freeclus
 if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% ! endlocal && set clusnum=0 && goto :eof
-if not %~1==echo && setlocal && set /a devstart=%bytedone%/0x200 && set /a clussect=%clussize%/0x200 &; set clean=Y
-if %~1==echo && setlocal && set /a devstart=%bytedone%/0x200 && set /a clussect=%clussize%/0x200 &; echo Clean %device%%%devstart%+%clussect%? && raw cat --hex --skip=%bytedone% --length=96 %device%%0+%devsect% && set clean= &; set /p /u "clean=Y/N > " && echo
+if not "%~1"=="echo" && setlocal && set /a devstart=%bytedone%/0x200 && set /a clussect=%clussize%/0x200 &; set clean=Y
+if "%~1"=="echo" && setlocal && set /a devstart=%bytedone%/0x200 && set /a clussect=%clussize%/0x200 &; echo Clean %device%%%devstart%+%clussect%? && raw cat --hex --skip=%bytedone% --length=96 %device%%0+%devsect% && set clean= &; set /p /u "clean=Y/N > " && echo
 if not %clean%==Y && endlocal && endlocal && set clusnum=0 && goto :eof
-if not %~1==echo && echo -n > %device%%%devstart%+%clussect% && endlocal
-if %~1==echo && echo -n > %device%%%devstart%+%clussect% && raw cat --hex --skip=%bytedone% --length=96 %device%%0+%devsect% && endlocal
-if %~1==echo && echo 2 bytedone=%bytedone% dirlen=%dirlen% fatsize=%fatsize%
-if %~1==echo && raw cat --hex --skip=%bytedone% --length=32 %device%%0+%devsect%
-if %~1==echo && echo lastclus=%lastclus% clusbyte=%clusbyte% clusnum=%clusnum% freebyte=%freebyte%
-if %~1==echo && echo %device%%0+%devsect% TE=%TE% EC=%EC%
-if %~1==echo && raw cat --hex --skip=%clusbyte% --length=16 %device%%0+%devsect% && echo
-if %~1==echo && raw cat --hex --skip=%freebyte% --length=16 %device%%0+%devsect%
-if %~1==echo && set makeclus= &; set /p /u "makeclus= Write to FAT1? Y/N > " && echo
-if %~1==echo && if not %makeclus%==Y && endlocal && set clusnum=0 && goto :eof
+if not "%~1"=="echo" && echo -n > %device%%%devstart%+%clussect% && endlocal
+if "%~1"=="echo" && echo -n > %device%%%devstart%+%clussect% && raw cat --hex --skip=%bytedone% --length=96 %device%%0+%devsect% && endlocal
+if "%~1"=="echo" && echo 2 bytedone=%bytedone% dirlen=%dirlen% fatsize=%fatsize%
+if "%~1"=="echo" && raw cat --hex --skip=%bytedone% --length=32 %device%%0+%devsect%
+if "%~1"=="echo" && echo lastclus=%lastclus% clusbyte=%clusbyte% clusnum=%clusnum% freebyte=%freebyte%
+if "%~1"=="echo" && echo %device%%0+%devsect% TE=%TE% EC=%EC%
+if "%~1"=="echo" && raw cat --hex --skip=%clusbyte% --length=16 %device%%0+%devsect% && echo
+if "%~1"=="echo" && raw cat --hex --skip=%freebyte% --length=16 %device%%0+%devsect%
+if "%~1"=="echo" && set makeclus= &; set /p /u "makeclus= Write to FAT1? Y/N > " && echo
+if "%~1"=="echo" && if not %makeclus%==Y && endlocal && set clusnum=0 && goto :eof
 set makeclus= && set w=3
 :write2fat1
-if exist fat1 if %fat1%>=0x200 if %clusbyte%>=%fat1% if %freebyte%>=%fat1% || endlocal && set clusnum=0 && set "message=Something went wrong in function '%mode%' fat1=%fat1% clusbyte=%clusbyte% freebyte=%freebyte%" && goto :eof
+if exist fat1 if %fat1%>=0x200 if %clusbyte%>=%fat1% if %freebyte%>=%fat1% || endlocal && set clusnum=0 && set "message=Something went wrong in function "%mode%" fat1=%fat1% clusbyte=%clusbyte% freebyte=%freebyte%" && goto :eof
 raw write --offset=%clusbyte% %device%%0+%devsect% %TE% > nul && set written1=Y
 raw write --offset=%freebyte% %device%%0+%devsect% %EC% > nul && set written2=Y
-if %~1==echo && echo FAT1 written1=%written1% written2=%written2%
+if "%~1"=="echo" && echo FAT1 written1=%written1% written2=%written2%
 if %w%>=1 &; if %written1%==Y if %written2%==Y || set /a w=%w%-1 && goto :write2fat1
-if %~1==echo && raw cat --hex --skip=%clusbyte% --length=16 %device%%0+%devsect% && echo
-if %~1==echo && raw cat --hex --skip=%freebyte% --length=16 %device%%0+%devsect%
+if "%~1"=="echo" && raw cat --hex --skip=%clusbyte% --length=16 %device%%0+%devsect% && echo
+if "%~1"=="echo" && raw cat --hex --skip=%freebyte% --length=16 %device%%0+%devsect%
 if not exist fat2 && if /i %filesys%%==fat32 && if %written2%==Y && call :driverFSinfo "%~1" &; if %result%==1 && set result= ! endlocal && set clusnum=0 && goto :eof
 if exist fat2 && set written1= && set written2= ! endlocal && set lastclus=%lastclus% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set chainlen=%chainlen% && goto :eof
 set /A fatlen=%fat2%-%fat1%
 ## writing to FAT2: cluster number of freeclus and terminate freeclus
 set /A clusbyte=%clusbyte%+%fatlen% && set /A freebyte=%freebyte%+%fatlen%
-if %~1==echo && echo clusbyte=%clusbyte% freebyte=%freebyte%
-if %~1==echo && echo TE=%TE% EC=%EC%
-if %~1==echo && set makeclus= &; set /p /u "makeclus= Write to FAT2? Y/N > " && echo
-if %~1==echo && if not %makeclus%==Y && endlocal && set clusnum=0 && goto :eof
+if "%~1"=="echo" && echo clusbyte=%clusbyte% freebyte=%freebyte%
+if "%~1"=="echo" && echo TE=%TE% EC=%EC%
+if "%~1"=="echo" && set makeclus= &; set /p /u "makeclus= Write to FAT2? Y/N > " && echo
+if "%~1"=="echo" && if not %makeclus%==Y && endlocal && set clusnum=0 && goto :eof
 set w=3
 :write2fat2
-if exist fat2 if %fat2%>=0x200 if %clusbyte%>=%fat2% if %freebyte%>=%fat2% || endlocal && set clusnum=0 && set "message=Something went wrong in function '%mode%' fat2=%fat2% clusbyte=%clusbyte% freebyte=%freebyte%" && goto :eof
+if exist fat2 if %fat2%>=0x200 if %clusbyte%>=%fat2% if %freebyte%>=%fat2% || endlocal && set clusnum=0 && set "message=Something went wrong in function "%mode%" fat2=%fat2% clusbyte=%clusbyte% freebyte=%freebyte%" && goto :eof
 raw write --offset=%clusbyte% %device%%0+%devsect% %TE% > nul && set written1=Y
 raw write --offset=%freebyte% %device%%0+%devsect% %EC% > nul && set written2=Y
-if %~1==echo && echo FAT2 written1=%written1% written2=%written2%
+if "%~1"=="echo" && echo FAT2 written1=%written1% written2=%written2%
 if %w%>=1 &; if %written1%==Y if %written2%==Y || set /a w=%w%-1 && goto :write2fat2
-if %~1==echo && raw cat --hex --skip=%clusbyte% --length=16 %device%%0+%devsect% && echo
-if %~1==echo && raw cat --hex --skip=%freebyte% --length=16 %device%%0+%devsect%
+if "%~1"=="echo" && raw cat --hex --skip=%clusbyte% --length=16 %device%%0+%devsect% && echo
+if "%~1"=="echo" && raw cat --hex --skip=%freebyte% --length=16 %device%%0+%devsect%
 if /i %filesys%%==fat32 && if %written2%==Y && call :driverFSinfo "%~1" &; if %result%==1 && set result= ! endlocal && set clusnum=0 && goto :eof
 endlocal && set lastclus=%lastclus% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set chainlen=%chainlen%
 goto :eof
@@ -1241,23 +1251,23 @@ goto :eof
 # FSinfo: unknown number of free clusters: 0x3E8=0xFFFFFFFF; unknown next free cluster: 0x3EC=0xFFFFFFFF; Remark: clusnum = +1, next_free is using count of total number of used clusters (so start with 1)
 setlocal && set * && set device=%device% && set devsect=%devsect% && set fatsize=%fatsize% && set freebyte=%freebyte% && set fat1=%fat1%
 set /A address=0x3E8 &; call :readendian "%address%" "%~1" &; if  exist result && set /A clusfree=%result%-1 &; set CF=00000000%clusfree:~2%
-if %~1==echo && echo %0: result=%result% clusfree=%clusfree% CF=%CF% \x%CF:~-2,2%\x%CF:~-4,2%\x%CF:~-6,2%\x%CF:~-8,2%
-if not %~1==echo && set makeclus=Y
-if %~1==echo && set makeclus= &; set /p /u "makeclus= Write free clusters to FSinfo sector? Y/N > " && echo
-if %~1==echo && if not %makeclus%==Y && endlocal && set result= && goto :eof
+if "%~1"=="echo" && echo %0: result=%result% clusfree=%clusfree% CF=%CF% \x%CF:~-2,2%\x%CF:~-4,2%\x%CF:~-6,2%\x%CF:~-8,2%
+if not "%~1"=="echo" && set makeclus=Y
+if "%~1"=="echo" && set makeclus= &; set /p /u "makeclus= Write free clusters to FSinfo sector? Y/N > " && echo
+if "%~1"=="echo" && if not %makeclus%==Y && endlocal && set result= && goto :eof
 if %makeclus%==Y && if %clusfree%<=0xFFFFFF6 && raw write --offset=0x3E8 %device%%0+2 \x%CF:~-2,2%\x%CF:~-4,2%\x%CF:~-6,2%\x%CF:~-8,2% > nul && set successF=Y
 if not %clusfree%<=0xFFFFFF6 && set successF=Y
 if %successF%==Y && set result= && set /A address=0x3EC &; call :readendian "%address%" "%~1" &; if  exist result && set /A nextfree=%result% &; if %nextfree%<=0xFFFFFF6 && set /A nextbyte=%nextfree%+1*4 &; set /A fatsize=%fatsize%-%nextbyte% && set /A fat1skip=%nextbyte%+%fat1%
 :driverFSinfoloop
-if %~1==echo && echo fat1skip=%fat1skip% bytefree=%bytefree%
-if %~1==echo && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect% && pause
+if "%~1"=="echo" && echo fat1skip=%fat1skip% bytefree=%bytefree%
+if "%~1"=="echo" && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect% && pause
 raw cat --skip=%fat1skip% --locate=\x00\x00\x00\x00 --number=1 --length=%fatsize% %device%%0+%devsect% > nul &; set /A bytefree=%?% &; set /A fatbyte=%bytefree%-%fat1% &; calc %fatbyte% % 4 &; set /A fat1skip=%bytefree%-%@retval%+2 && set bytefree= && set fatbyte= && goto :driverFSinfoloop
 if not exist bytefree && if not exist loopnum && set fat1skip=%fat1% && set fatsize=%nextbyte% && set loopnum=2 && goto :driverFSinfoloop
 if exist bytefree && set /A nextfree=%bytefree%-%fat1%/4-1 &; set NF=00000000%nextfree:~2%
-if %~1==echo && echo %0: result=%result% freebyte=%freebyte% nextbyte=%nextbyte% bytefree=%bytefree% nextfree=%nextfree% NF=%NF% \x%NF:~-2,2%\x%NF:~-4,2%\x%NF:~-6,2%\x%NF:~-8,2%
-if not %~1==echo && set makeclus=Y
-if %~1==echo && set makeclus= &; set /p /u "makeclus= Write next free cluster to FSinfo sector? Y/N > " && echo
-if %~1==echo && if not %makeclus%==Y && endlocal && set result= && goto :eof
+if "%~1"=="echo" && echo %0: result=%result% freebyte=%freebyte% nextbyte=%nextbyte% bytefree=%bytefree% nextfree=%nextfree% NF=%NF% \x%NF:~-2,2%\x%NF:~-4,2%\x%NF:~-6,2%\x%NF:~-8,2%
+if not "%~1"=="echo" && set makeclus=Y
+if "%~1"=="echo" && set makeclus= &; set /p /u "makeclus= Write next free cluster to FSinfo sector? Y/N > " && echo
+if "%~1"=="echo" && if not %makeclus%==Y && endlocal && set result= && goto :eof
 if exist NF && if %makeclus%==Y && raw write --offset=0x3EC %device%%0+2 \x%NF:~-2,2%\x%NF:~-4,2%\x%NF:~-6,2%\x%NF:~-8,2% > nul && set successN=Y
 if not %nextfree%<=0xFFFFFF6 && set successN=Y
 if %successF%==Y && if %successN%==Y && set result=1 ! set result=
@@ -1267,72 +1277,72 @@ goto :eof
 :clustersfat12
 ## cluster codes. Free: 000, reserved -do not use: 001, in use: 002-FEF, last: FF8-FFF, reserved: FF0-FF6, bad: FF7
 setlocal
-if %~1==echo && echo %0: clusnum=%clusnum% lastclus=%lastclus%
+if "%~1"=="echo" && echo %0: clusnum=%clusnum% lastclus=%lastclus%
 set /A clusbyte=%clusnum% / 2 + %clusnum%
 set freeclus=\x00\x00 && set /A fat1skip=%fat1%+%clusbyte% && set /A fatsize=%fatsize%-%clusbyte%
-if %~1==echo && echo fat1skip=%fat1skip% clusnum=%clusnum% clusbyte=%clusbyte% fatsize=%fatsize%
+if "%~1"=="echo" && echo fat1skip=%fat1skip% clusnum=%clusnum% clusbyte=%clusbyte% fatsize=%fatsize%
 :clustersfat12loop
-if %~1==echo && echo fat1skip=%fat1skip%
-if %~1==echo && raw cat --hex --skip=%fat1skip% --length=32 %device%%0+%devsect%
+if "%~1"=="echo" && echo fat1skip=%fat1skip%
+if "%~1"=="echo" && raw cat --hex --skip=%fat1skip% --length=32 %device%%0+%devsect%
 raw cat --skip=%fat1skip% --locate=%freeclus% --length=%fatsize% --number=1 %device%%0+%devsect% > nul &; set /A freebyte=%?% &; set /A fatbyte=%freebyte%-%fat1% &; calc %fatbyte% % 3 &; set /A fat1skip=%freebyte%-%@retval%+3 && set freebyte= && set fatbyte= && goto :clustersfat12loop
 if not exist freebyte && if not exist loopnum && set fat1skip=%fat1% && set fatsize=%clusbyte% && set loopnum=2 && goto :clustersfat12loop
 if not exist freebyte && endlocal && set "message=No free entries found in FAT-table" && set freeclus=0 && goto :eof
 #INTESTPHASE#if exist freebyte && setlocal && calc %freebyte% % 3 && set /A checkbyt=%freebyte%-2 &; call :readendian "%checkbyte%" "%~1" &; set /A check=%result%&0xffff>>4 && set /A exist=%result%&0xf &; set result= && pause freebyte=%freebyte% checkbyt=%checkbyt% check=%check% exist=%exist% key.. && endlocal
-#INTESTPHASE#calc %freebyte% % 3 |; set /A freeclus=%freebyte% - %fat1% * 2 / 3 &; set FC=000%freeclus:~2% && set EC=\xFF\x0F && if %~1==echo && echo even freeclus number
-#INTESTPHASE#calc %freebyte% % 3 &; set /A freeclus=%freebyte% - %fat1% * 2 / 3 + 1 &; set FC=000%freeclus:~2% && set EC=\xF0\xFF && if %~1==echo && echo odd freeclus number
-set /A freeclus=%freebyte% - %fat1% * 2 / 3 &; set FC=000%freeclus:~2% && set EC=\xFF\x0F && calc %freeclus% % 2 && set EC=\xF0\xFF && if %~1==echo && echo odd freeclus number
-if %~1==echo && debug 1 && debug msg=1
+#INTESTPHASE#calc %freebyte% % 3 |; set /A freeclus=%freebyte% - %fat1% * 2 / 3 &; set FC=000%freeclus:~2% && set EC=\xFF\x0F && if "%~1"=="echo" && echo even freeclus number
+#INTESTPHASE#calc %freebyte% % 3 &; set /A freeclus=%freebyte% - %fat1% * 2 / 3 + 1 &; set FC=000%freeclus:~2% && set EC=\xF0\xFF && if "%~1"=="echo" && echo odd freeclus number
+set /A freeclus=%freebyte% - %fat1% * 2 / 3 &; set FC=000%freeclus:~2% && set EC=\xFF\x0F && calc %freeclus% % 2 && set EC=\xF0\xFF && if "%~1"=="echo" && echo odd freeclus number
+if "%~1"=="echo" && debug 1 && debug msg=1
 #NEEDED?# check for bad clusters etc.
-calc %clusnum% % 2 &; set /A address=%clusnum% / 2 + %clusnum% + %fat1% &; call :readendian "%address%" "%~1" &; set /A twoentry=%result%&0xffff &; set result= && set TE=0000%twoentry:~2% &; set TE=\x%FC:~-1,1%%%TE:~-1,1%\x%FC:~-3,2% && if %~1==echo && echo odd chosen
-calc %clusnum% % 2 |; set /A address=%clusnum% / 2 + %clusnum% + %fat1% &; call :readendian "%address%" "%~1" &; set /A twoentry=%result%&0xffffff &; set result= && set TE=000000%twoentry:~2% &; set TE=\x%FC:~-2,2%\x%TE:~-4,1%%%FC:~-3,1%\x%TE:~-6,2% && if %~1==echo && echo even chosen
+calc %clusnum% % 2 &; set /A address=%clusnum% / 2 + %clusnum% + %fat1% &; call :readendian "%address%" "%~1" &; set /A twoentry=%result%&0xffff &; set result= && set TE=0000%twoentry:~2% &; set TE=\x%FC:~-1,1%%%TE:~-1,1%\x%FC:~-3,2% && if "%~1"=="echo" && echo odd chosen
+calc %clusnum% % 2 |; set /A address=%clusnum% / 2 + %clusnum% + %fat1% &; call :readendian "%address%" "%~1" &; set /A twoentry=%result%&0xffffff &; set result= && set TE=000000%twoentry:~2% &; set TE=\x%FC:~-2,2%\x%TE:~-4,1%%%FC:~-3,1%\x%TE:~-6,2% && if "%~1"=="echo" && echo even chosen
 set /A clusbyte=%clusbyte%+%fat1%
-if %~1==echo && debug msg=0
-if %~1==echo && echo clusnum=%clusnum% clusbyte=%clusbyte% TE=%TE% twoentry=%twoentry%
-if %~1==echo && raw cat --hex --skip=%clusbyte% --length=16 %device%%0+%devsect%
-if %~1==echo && echo freeclus=%freeclus% freebyte=%freebyte% EC=%EC%
-if %~1==echo && raw cat --hex --skip=%freebyte% --length=16 %device%%0+%devsect%
+if "%~1"=="echo" && debug msg=0
+if "%~1"=="echo" && echo clusnum=%clusnum% clusbyte=%clusbyte% TE=%TE% twoentry=%twoentry%
+if "%~1"=="echo" && raw cat --hex --skip=%clusbyte% --length=16 %device%%0+%devsect%
+if "%~1"=="echo" && echo freeclus=%freeclus% freebyte=%freebyte% EC=%EC%
+if "%~1"=="echo" && raw cat --hex --skip=%freebyte% --length=16 %device%%0+%devsect%
 endlocal && set clusbyte=%clusbyte% && set freeclus=%freeclus% && set freebyte=%freebyte% && set TE=%TE% && set EC=%EC% && set chainlen=%chainlen%
 goto :eof
 
 :clustersfat16
 setlocal
-if %~1==echo && echo %0: lastclus=%lastclus%
+if "%~1"=="echo" && echo %0: lastclus=%lastclus%
 set /A clusbyte=%clusnum% * 2
 set freeclus=\x00\x00 && set /A fat1skip=%fat1%+%clusbyte% && set /A fatsize=%fatsize%-%clusbyte%
 :clustersfat16loop
-if %~1==echo && echo fat1skip=%fat1skip% clusnum=%clusnum%
-if %~1==echo && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect%
+if "%~1"=="echo" && echo fat1skip=%fat1skip% clusnum=%clusnum%
+if "%~1"=="echo" && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect%
 raw cat --skip=%fat1skip% --locate=%freeclus% --length=%fatsize% --number=1 %device%%0+%devsect% > nul &; set /A freebyte=%?% &; set /A fatbyte=%freebyte%-%fat1% &; calc %fatbyte% % 2 &; set /A fat1skip=%freebyte%-%@retval%+2 && set freebyte= && set fatbyte= && goto :clustersfat16loop
 if not exist freebyte && if not exist loopnum && set fat1skip=%fat1% && set fatsize=%clusbyte% && set loopnum=2 && goto :clustersfat16loop
 if not exist freebyte && endlocal && set "message=No free entries found in FAT-table" && set freeclus=0 && goto :eof
 set /A freeclus=%freebyte% - %fat1% / 2 &; set FC=0000%freeclus:~2% && set EC=\xFF\xFF
-if %~1==echo && debug 1 && debug msg=1
+if "%~1"=="echo" && debug 1 && debug msg=1
 set /A address=%clusnum% * 2 + %fat1% &; call :readendian "%address%" "%~1" &; set /A fatentry=%result%&0xffff &; set result= && if %fatentry%>=0xFFF0 && set TE=\x%FC:~-2,2%\x%FC:~-4,2% && set /A clusbyte=%address% ! endlocal && set freeclus=0 && goto :eof
-if %~1==echo && debug msg=0
-if %~1==echo && echo lastclus=%lastclus% clusnum=%clusnum% clusbyte=%clusbyte% freeclus=%freeclus% freebyte=%freebyte% TE=%TE% EC=%EC%
-if %~1==echo && echo clusbyte=%clusbyte% freeclus=%freeclus% freebyte=%freebyte% TE=%TE% EC=%EC%
-if %~1==echo && pager on && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect% && pager off
+if "%~1"=="echo" && debug msg=0
+if "%~1"=="echo" && echo lastclus=%lastclus% clusnum=%clusnum% clusbyte=%clusbyte% freeclus=%freeclus% freebyte=%freebyte% TE=%TE% EC=%EC%
+if "%~1"=="echo" && echo clusbyte=%clusbyte% freeclus=%freeclus% freebyte=%freebyte% TE=%TE% EC=%EC%
+if "%~1"=="echo" && pager on && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect% && pager off
 endlocal && set clusbyte=%clusbyte% && set freeclus=%freeclus% && set freebyte=%freebyte% && set TE=%TE% && set EC=%EC% && set chainlen=%chainlen%
 goto :eof
 
 :clustersfat32
 setlocal
-if %~1==echo && echo %0: lastclus=%lastclus%
+if "%~1"=="echo" && echo %0: lastclus=%lastclus%
 set /A clusbyte=%clusnum% * 4
 set freeclus=\x00\x00\x00\x00 && set /A fat1skip=%fat1%+%clusbyte% && set /A fatsize=%fatsize%-%clusbyte%
 :clustersfat32loop
-if %~1==echo && echo fat1skip=%fat1skip% clusnum=%clusnum%
-if %~1==echo && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect%
+if "%~1"=="echo" && echo fat1skip=%fat1skip% clusnum=%clusnum%
+if "%~1"=="echo" && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect%
 raw cat --skip=%fat1skip% --locate=%freeclus% --length=%fatsize% --number=1 %device%%0+%devsect% > nul &; set /A freebyte=%?% &; set /A fatbyte=%freebyte%-%fat1% &; calc %fatbyte% % 4 &; set /A fat1skip=%freebyte%-%@retval%+4 && set freebyte= && set fatbyte= && goto :clustersfat32loop
 if not exist freebyte && if not exist loopnum && set fat1skip=%fat1% && set fatsize=%clusbyte% && set loopnum=2 && goto :clustersfat32loop
 if not exist freebyte && endlocal && set "message=No free entries found in FAT-table" && set freeclus=0 && goto :eof
 set /A freeclus=%freebyte% - %fat1% / 4 &; set FC=00000000%freeclus:~2% && set EC=\xFF\xFF\xFF\x0F
 #NOTSTANDARD#set /A freeclus=%freebyte% - %fat1% / 4 &; set FC=00000000%freeclus:~2% && set EC=\xFF\xFF\xFF\xFF
-if %~1==echo && debug 1 && debug msg=1
+if "%~1"=="echo" && debug 1 && debug msg=1
 set /A address=%clusnum% * 4 + %fat1% &; call :readendian "%address%" "%~1" &; set /A fatentry=%result%&0xffffffff &; set result= && if %fatentry%>=0xFFFFFF7 && set TE=\x%FC:~-2,2%\x%FC:~-4,2%\x%FC:~-6,2%\x%FC:~-8,2% && set /A clusbyte=%address% ! endlocal && set freeclus=0 && goto :eof
-if %~1==echo && debug msg=0
-if %~1==echo && echo clusbyte=%clusbyte% freeclus=%freeclus% freebyte=%freebyte% TE=%TE% EC=%EC%
-if %~1==echo && pager on && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect% && pager off
+if "%~1"=="echo" && debug msg=0
+if "%~1"=="echo" && echo clusbyte=%clusbyte% freeclus=%freeclus% freebyte=%freebyte% TE=%TE% EC=%EC%
+if "%~1"=="echo" && pager on && raw cat --hex --skip=%fat1% --length=32 %device%%0+%devsect% && pager off
 endlocal && set clusbyte=%clusbyte% && set freeclus=%freeclus% && set freebyte=%freebyte% && set TE=%TE% && set EC=%EC% && set chainlen=%chainlen%
 goto :eof
 
@@ -1352,51 +1362,91 @@ goto :eof
 if not exist bytedone && set lfnfile= && goto :eof
 if not exist lfnindex && set /A mdlfnA=%mdbase% + 1 * 0x200 &; set mem=%dirlen% &; call Fn.24 %mdlfnA% 0x00 %mem%
 set mdlfnA= && set mem=
-if %~2==echo && echo %0 clusnum=%clusnum%
+if "%~2"=="echo" && echo %0 clusnum=%clusnum%
 #ORG#if not %clusnum%>=2 && set lfnindex= && set bytedone= && call :findpath "%path%" "%~2" &; if %clusnum%==0 && set result= && set "message=%~dp1 not found" && goto :eof
 set chainlen=%clussize%
-if %~2==echo && echo lfnindex=%lfnindex% clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% && pause
-if %~2==echo && call :findfile file "%~2" &; echo A && pager on && set && echo && if not exist entry && set lfnfile= && goto :eof
-if not %~2==echo && call :findfile "file" &; if not exist entry && set lfnfile= && set "message=SFN %device%%%path%%%name%%%ext% not found" && goto :eof ! if %entry%<=0x200 && set lfnfile= && set "message=%device%%%path%%%name%%%ext% not found, entry=%entry%" && goto :eof
+if "%~2"=="echo" && echo lfnindex=%lfnindex% clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% && pause
+if "%~2"=="echo" && call :findfile file "%~2" &; echo A && pager on && set && echo && if not exist entry && set lfnfile= && goto :eof
+if not "%~2"=="echo" && call :findfile "file" &; if not exist entry && set lfnfile= && set "message=SFN "%device%%%path%%%name%%%ext%" not found" && goto :eof ! if %entry%<=0x200 && set lfnfile= && set "message=%device%%%path%%%name%%%ext% not found, entry=%entry%" && goto :eof
 setlocal && set * && set mdbase=%mdbase% && set root=%root% && set dataarea=%dataarea% && set device=%device% && set "path=%path%" && set name=%name% && set ext=%ext% && set bytedone=%bytedone% && set dirlen=%dirlen% && set lfnindex=%lfnindex% && set entry=%entry% && set ENTRY=%ENTRY% && set filesys=%filesys% && set clussize=%clussize% && set clusnum=%clusnum%
-if %~2==echo && pager on && echo B && set && echo && pager off
-call :sfnchecksum "%ENTRY%" &; if not exist checksum && endlocal && set lfnfile= && set "message=SFN-checksum of '%device%%%path%%%name%%%ext%' not found" && goto :eof
-#org#call :sfnchecksum &; if not exist checksum && endlocal && set lfnfile= && set "message=SFN-checksum of '%device%%%path%%%name%%%ext%' not found" && goto :eof
-if %~2==echo && echo checksum=%checksum%
+if "%~2"=="echo" && pager on && echo B && set && echo && pager off
+call :sfnchecksum "%ENTRY%" &; if not exist checksum && endlocal && set lfnfile= && set "message=SFN-checksum of "%device%%%path%%%name%%%ext%" not found" && goto :eof
+#org#call :sfnchecksum &; if not exist checksum && endlocal && set lfnfile= && set "message=SFN-checksum of "%device%%%path%%%name%%%ext%" not found" && goto :eof
+if "%~2"=="echo" && echo checksum=%checksum%
 set /A mdlfnA=%mdbase%+1 &; if not /i %filesys%==fat32 && if "%path%"=="/" && set /a lfnsect=%dirlen% / 512 ! set /A lfnsect=%lfnindex% * %dirlen% / 512
 if /i %filesys%==fat32 &; set /A lfnsect=%lfnindex% * %dirlen% / 512
 if %lfnindex%>=2 && set /A sfnentry=%lfnindex% - 2 * %dirlen% + %entry% - %bytedone% ! set /A sfnentry=%entry%-%bytedone%
 #notreallyneeded#set /A skiplfn=%lfnindex% - 2 * %dirlen% + %entry% - %bytedone%
 #notreallyneeded#raw cat --skip=%skiplfn% --locate="%ENTRY%" --length=11 (md)%mdlfnA%+%lfnsect% > nul &; set /A sfnentry=%?%
 #org#raw cat --locate="%ENTRY%" (md)%mdlfnA%+%lfnsect% > nul &; set /A sfnentry=%?%
-if %~2==echo && skiplfn=%skiplfn% lfnindex=%lfnindex% clussize=%clussize% dirlen=%dirlen% bytedone=%bytedone% entry=%entry% sfnentry=%sfnentry%
+if "%~2"=="echo" && skiplfn=%skiplfn% lfnindex=%lfnindex% clussize=%clussize% dirlen=%dirlen% bytedone=%bytedone% entry=%entry% sfnentry=%sfnentry%
 if not exist sfnentry && endlocal && set lfnfile= && goto :eof
 set /A memlfn=%mdlfnA% * 0x200 &; set /A entry=%memlfn% + %sfnentry%
-if %~2==echo && echo memlfn=%memlfn% entry=%entry%
+if "%~2"=="echo" && echo memlfn=%memlfn% entry=%entry%
 #ORG#set /A address=%entry% + 0xB - 0x20 &; read %address% #;; set /A attrib=%@retval%&0xff &; if not %attrib%==0xF && endlocal && set lfnfile= && set "message=LFN of %device%%%path%%%name%%%ext% not found" && goto :eof
-if %~2==echo && echo attrib=%attrib%
+if "%~2"=="echo" && echo attrib=%attrib%
 #ORG#set /A address=%address% + 0x2 &; read %address% #;; set /A check=%@retval%&0xff &; if not %check%==0x%checksum% && endlocal && set lfnfile= && set "message=LFN of %device%%%path%%%name%%%ext% not found" && goto :eof
-if %~2==echo && echo check=%check% checksum=%checksum%
+if "%~2"=="echo" && echo check=%check% checksum=%checksum%
 set /A lfnentry=%sfnentry%-0x20
 #ORG#set /A lfnentry=%sfnentry% - 0x20 && set /A address=%entry% - 0x20
 set lfnfile=.
 :getlfnloop
+#if %ordinal%>=0x40 && endlocal && set "lfnfile=%lfnfile%" && goto :eof
 if %ordinal%>=0x40 && endlocal && set "lfnfile=%lfnfile:~1%" && goto :eof
 cat --hex --skip=%lfnentry% --length=16 (md)%mdlfnA%+%lfnsect% | set hexA=
 set "hexA=%hexA:~10,50%"
 set /A ordinal=0x%hexA:~0,2%
-if %ordinal%==0xE5 && endlocal && set lfnfile= && set "message=LFN of '%device%%%path%%%name%%%ext%' not found" && goto :eof
-set /A attrib=0x%hexA:~35,2% &; if not %attrib%==0xF && endlocal && set lfnfile= && set "message=LFN of '%device%%%path%%%name%%%ext%' not found" && goto :eof
-set /A check=0x%hexA:~42,2% &; if not %check%==0x%checksum% && endlocal && set lfnfile= && set "message=LFN of '%device%%%path%%%name%%%ext%' not found" && goto :eof
+if %ordinal%==0xE5 && endlocal && set lfnfile= && set "message=LFN of "%device%%%path%%%name%%%ext%" not found" && goto :eof
+set /A attrib=0x%hexA:~35,2% &; if not %attrib%==0xF && endlocal && set lfnfile= && set "message=LFN of "%device%%%path%%%name%%%ext%" not found" && goto :eof
+set /A check=0x%hexA:~42,2% &; if not %check%==0x%checksum% && endlocal && set lfnfile= && set "message=LFN of "%device%%%path%%%name%%%ext%" not found" && goto :eof
 set /A lfnentry=%lfnentry%+0x10
 cat --hex --skip=%lfnentry% --length=16 (md)%mdlfnA%+%lfnsect% | set hexB=
 set "hexB=%hexB:~10,50%"
-echo -e \x%hexA:~3,2%\x%hexA:~9,2%\x%hexA:~16,2%\x%hexA:~22,2%\x%hexA:~29,2%\x%hexA:~45,2%\x%hexB:~0,2%\x%hexB:~6,2%\x%hexB:~13,2%\x%hexB:~19,2%\x%hexB:~26,2%\x%hexB:~39,2%\x%hexB:~45,2% | set lfnfile=%lfnfile%
+setlocal && set * && set "hexA=%hexA%" && set "hexB=%hexB%"
+#echo $[0x00]"$[0x07]\x%hexA:~3,2%\x%hexA:~9,2%\x%hexA:~16,2%\x%hexA:~22,2%\x%hexA:~29,2%\x%hexA:~45,2%\x%hexB:~0,2%\x%hexB:~6,2%\x%hexB:~13,2%\x%hexB:~19,2%\x%hexB:~26,2%\x%hexB:~39,2%\x%hexB:~45,2%
+set "char1=\x%hexA:~3,2%" ;; if "%char1%"=="\x00" && set char1= ;; if "%char1%"=="\xFF" && set char1=
+set "char2=\x%hexA:~9,2%" ;; if "%char2%"=="\x00" && set char2= ;; if "%char2%"=="\xFF" && set char2=
+set "char3=\x%hexA:~16,2%" ;; if "%char3%"=="\x00" && set char3= ;; if "%char3%"=="\xFF" && set char3=
+set "char4=\x%hexA:~22,2%" ;; if "%char4%"=="\x00" && set char4= ;; if "%char4%"=="\xFF" && set char4=
+set "char5=\x%hexA:~29,2%" ;; if "%char5%"=="\x00" && set char5= ;; if "%char5%"=="\xFF" && set char5=
+set "char6=\x%hexA:~45,2%" ;; if "%char6%"=="\x00" && set char6= ;; if "%char6%"=="\xFF" && set char6=
+set "char7=\x%hexB:~0,2%" ;; if "%char7%"=="\x00" && set char7= ;; if "%char7%"=="\xFF" && set char7=
+set "char8=\x%hexB:~6,2%" ;; if "%char8%"=="\x00" && set char8= ;; if "%char8%"=="\xFF" && set char8=
+set "char9=\x%hexB:~13,2%" ;; if "%char9%"=="\x00" && set char9= ;; if "%char9%"=="\xFF" && set char9=
+set "char10=\x%hexB:~19,2%" ;; if "%char10%"=="\x00" && set char10= ;; if "%char10%"=="\xFF" && set char10=
+set "char11=\x%hexB:~26,2%" ;; if "%char11%"=="\x00" && set char11= ;; if "%char11%"=="\xFF" && set char11=
+set "char12=\x%hexB:~39,2%" ;; if "%char12%"=="\x00" && set char12= ;; if "%char12%"=="\xFF" && set char12=
+set "char13=\x%hexB:~45,2%" ;; if "%char13%"=="\x00" && set char13= ;; if "%char13%"=="\xFF" && set char13=
+set "allchars=%char1%%%char2%%%char3%%%char4%%%char5%%%char6%%%char7%%%char8%%%char9%%%char10%%%char11%%%char12%%%char13%"
+#set char && echo && pause
+#echo allchars=%allchars%
+endlocal && set "allchars=%allchars%"
+call Fn.11 "%allchars%" "\x25" && endlocal && set lfnfile= && set "message=Char "%" in Long File Names not supported" && goto :eof
+set lfnfileA=
+#echo 1 $[0x00]"$[0x07]lfnfile=%lfnfile%
+#echo $[0x00]"$[0x07]\x%hexA:~3,2%\x%hexA:~9,2%\x%hexA:~16,2%\x%hexA:~22,2%\x%hexA:~29,2%\x%hexA:~45,2%\x%hexB:~0,2%\x%hexB:~6,2%\x%hexB:~13,2%\x%hexB:~19,2%\x%hexB:~26,2%\x%hexB:~39,2%\x%hexB:~45,2%
+#set "hex=\x%hexA:~3,2%\x%hexA:~9,2%\x%hexA:~16,2%\x%hexA:~22,2%\x%hexA:~29,2%\x%hexA:~45,2%\x%hexB:~0,2%\x%hexB:~6,2%\x%hexB:~13,2%\x%hexB:~19,2%\x%hexB:~26,2%\x%hexB:~39,2%\x%hexB:~45,2%"
+#echo -e $[0x00]"$[0x07]%hex%
+echo -n > (md)%mdbase%+1
+write --offset=0 (md)%mdbase%+1 "%allchars%" > nul
+#cat --hex --length=16 (md)%mdbase%+1
+cat (md)%mdbase%+1 | set lfnfileA= &; set "lfnfileA=%lfnfileA:~1,-1%" &; set "lfnfile=%lfnfile%%%lfnfileA%"
+#OKE_EXCEPT_COLOR_CODES#echo -e "%allchars%" | set lfnfileA= &; set "lfnfileA=%lfnfileA:~1,-1%" &; set "lfnfile=%lfnfile%%%lfnfileA%"
+#echo -e "\x%hexA:~3,2%\x%hexA:~9,2%\x%hexA:~16,2%\x%hexA:~22,2%\x%hexA:~29,2%\x%hexA:~45,2%\x%hexB:~0,2%\x%hexB:~6,2%\x%hexB:~13,2%\x%hexB:~19,2%\x%hexB:~26,2%\x%hexB:~39,2%\x%hexB:~45,2%" | set lfnfileA=.
+#echo 2 $[0x00]"$[0x07]lfnfileA=%lfnfileA%
+#set "lfnfileA=%lfnfileA:~0,-1%"
+#set "lfnfileA=%lfnfileA:~2,-1%"
+#echo 3 $[0x00]"$[0x07]lfnfileA=%lfnfileA%
+#set "lfnfile=%lfnfile%%%lfnfileA%"
+#echo 4 $[0x00]"$[0x07]lfnfile=%lfnfile%
+#&; echo $[0x00]"$[0x07]lfnfileA=%lfnfileA%
+#set "lfnfileA=%lfnfileA:~1,-1%" &; set "lfnfile=%lfnfile%%%lfnfileA%"
+#NEWER#echo -e \x%hexA:~3,2%\x%hexA:~9,2%\x%hexA:~16,2%\x%hexA:~22,2%\x%hexA:~29,2%\x%hexA:~45,2%\x%hexB:~0,2%\x%hexB:~6,2%\x%hexB:~13,2%\x%hexB:~19,2%\x%hexB:~26,2%\x%hexB:~39,2%\x%hexB:~45,2% | set lfnfile=%lfnfile%
 #ORG#echo -e \x%hexA:~3,2%\x%hexA:~9,2%\x%hexA:~16,2%\x%hexA:~22,2%\x%hexA:~29,2%\x%hexA:~45,2%\x%hexB:~0,2%\x%hexB:~6,2%\x%hexB:~13,2%\x%hexB:~19,2%\x%hexB:~26,2%\x%hexB:~39,2%\x%hexB:~45,2% | set lfnfile=%lfnfile%
 set /A lfnentry=%lfnentry%-0x30
 goto :getlfnloop
 #ORG#:getlfnloop
-if %~2==echo && echo ordinal=%ordinal% sfnentry=%sfnentry% address=%address lfnfile=%lfnfile% && echo
+if "%~2"=="echo" && echo ordinal=%ordinal% sfnentry=%sfnentry% address=%address lfnfile=%lfnfile% && echo
 if %ordinal%>=0x40 && endlocal && set "lfnfile=%lfnfile%" && goto :eof
 read %address% &; set /A ordinal=%@retval%&0xff && set /A address=%address%+0x1
 if %ordinal%==0xE5 && endlocal && set lfnfile= && set "message=LFN of %device%%%path%%%name%%%ext% not found" && goto :eof
@@ -1418,7 +1468,7 @@ set /A lfnentry=%lfnentry% - 0x20 && set /A address=%address% - 0x1E - 0x20
 #ORG#goto :getlfnloop
 
 :findfile
-if %~2==echo && echo %0: %* "name=%name%"
+if "%~2"=="echo" && echo %0: %* "name=%name%"
 set SFN= &; call :checksfn "%name%%%ext%"
 if %mode%==getlfn && if %SFN%==N && set entry= && goto :eof
 if "%path%"=="/" && set clusnum=2
@@ -1433,65 +1483,65 @@ if %mode%==getlfn && if exist lfnindex && set offset=%bytedone% && set search=%d
 #ORG#if %mode%==getlfn && if exist lfnindex && goto :skipcopygetlfn
 setlocal && set * && set mode=%mode% && set mdbase=%mdbase% && set device=%device% && set devsect=%devsect% && set bytedone=%bytedone% && set dirlen=%dirlen% && set "path=%path%" && set filesys=%filesys%
 if %mode%==getlfn && if "%path%"=="/" && if not /i %filesys%==fat32 && set lfnindex=0 && set skipcopy=0 && set /A mdlfnA=%mdbase%+1 && set /a lfnsect=%dirlen%/512 &; raw dd if=%device%%0+%devsect% of=(md)%mdlfnA%+%lfnsect% bs=1 count=%dirlen% skip=%bytedone% > nul
-if %~2==echo && if %mode%==getlfn && if not /i %filesys%==fat32 && raw cat --hex --length=96 --skip=%skipcopy% (md)%mdlfnA%+%lfnsect%
+if "%~2"=="echo" && if %mode%==getlfn && if not /i %filesys%==fat32 && raw cat --hex --length=96 --skip=%skipcopy% (md)%mdlfnA%+%lfnsect%
 #ORG#if %mode%==getlfn && if "%path%"=="/" && if not /i %filesys%==fat32 && set lfnindex=0 && set /A mdlfnA=%mdbase%+1 && set /a lfnsect=%dirlen%/512 &; raw dd if=%device%%0+%devsect% of=(md)%mdlfnA%+%lfnsect% bs=1 count=%dirlen% skip=%bytedone% > nul
 if %mode%==getlfn && if "%path%"=="/" && if /i %filesys%==fat32 && set lfnindex=1
 if %mode%==getlfn && if not "%path%"=="/" && set lfnindex=1
-if %~2==echo && if %lfnindex%==0 && raw cat --hex --length=96 (md)%mdlfnA%+%lfnsect% && pause
+if "%~2"=="echo" && if %lfnindex%==0 && raw cat --hex --length=96 (md)%mdlfnA%+%lfnsect% && pause
 endlocal && set lfnindex=%lfnindex%
 :findfileloop
 setlocal && set * && set mode=%mode% && set mdbase=%mdbase% && set device=%device% && set devsect=%devsect% && set bytedone=%bytedone% && set dirlen=%dirlen% && set lfnindex=%lfnindex% && set secpclus=%secpclus%
-if %~2==echo && echo 0 mode=%mode% mdbase=%mdbase% device=%device% devsect=%devsect% bytedone=%bytedone% dirlen=%dirlen% lfnindex=%lfnindex% secpclus=%secpclus%
+if "%~2"=="echo" && echo 0 mode=%mode% mdbase=%mdbase% device=%device% devsect=%devsect% bytedone=%bytedone% dirlen=%dirlen% lfnindex=%lfnindex% secpclus=%secpclus%
 if %mode%==getlfn && if %lfnindex%>=1 &; set /A mdlfnA=%mdbase%+1 && set /a lfnsect=%lfnindex% * %dirlen% / 512 &; set /A mdlfnB=%lfnindex% - 1 * %lfnsect% + %mdlfnA% &; echo -n > (md)%mdlfnB%+%secpclus% && set /A skipcopy=%lfnindex% - 1 * %dirlen% && set /a lfnindex=%lfnindex%+1 &; raw dd if=%device%%0+%devsect% of=(md)%mdlfnA%+%lfnsect% bs=1 count=%dirlen% skip=%bytedone% seek=%skipcopy% > nul
-if %~2==echo && if %mode%==getlfn && if /i %filesys%==fat32 && raw cat --hex --length=96 --skip=%skipcopy% (md)%mdlfnA%+%lfnsect%
+if "%~2"=="echo" && if %mode%==getlfn && if /i %filesys%==fat32 && raw cat --hex --length=96 --skip=%skipcopy% (md)%mdlfnA%+%lfnsect%
 endlocal && set lfnindex=%lfnindex%
 set offset=%bytedone% && set search=%dirlen% && set /A endentry=%bytedone%+%dirlen%-0x20
 :skipcopygetlfn
-if %~2==echo && echo 1 ENTRY=%ENTRY% entry=%entry% lfnindex=%lfnindex% offset=%offset% search=%search% endentry=%endentry% && pause
+if "%~2"=="echo" && echo 1 ENTRY=%ENTRY% entry=%entry% lfnindex=%lfnindex% offset=%offset% search=%search% endentry=%endentry% && pause
 set entry= && set success=
 raw cat --skip=%offset% --locate="%ENTRY%" --length=%search% --number=1 %device%%0+%devsect% | set entry= &; if exist entry && if 0x%entry%>=%offset% && set /A entry=0x%entry% &; calc 0x%entry:~-2,2% % 0x20 &; set /A offset=%entry%-%@retval%+0x20 &; if %offset%<=%endentry% && set /A search=%bytedone%-%offset%+%dirlen% && goto :skipcopygetlfn ! set entry=
 #ORG#raw cat --skip=%offset% --locate="%ENTRY%" --length=%search% --number=1 %device%%0+%devsect% | set entry= &; if exist entry && set /A entry=0x%entry% &; if %entry%>=%offset% && calc 0x%entry:~-2,2% % 0x20 &; set /A offset=%entry%-%@retval%+0x20 &; if %offset%<=%endentry% && set /A search=%bytedone%-%offset%+%dirlen% && goto :skipcopygetlfn ! set entry=
 if exist entry && if not %entry%>=%offset% && endlocal && set "message=BAD search in :findfile" && set entry= && goto :eof
 #org#raw cat --skip=%bytedone% --locate="%ENTRY%" --length=%dirlen% --number=1 %device%%0+%devsect% | set entry= &; if exist entry && set /A entry=0x%entry%
-if exist entry && if not %entry%>=0x200 && echo BAD entry=%entry% && endlocal && set "message=BAD 'entry=%entry%'" && set entry= && goto :eof
-if %~2==echo && echo 2 entry=%entry% ENTRY=%ENTRY%
+if exist entry && if not %entry%>=0x200 && echo BAD entry=%entry% && endlocal && set "message=BAD entry="%entry%"" && set entry= && goto :eof
+if "%~2"=="echo" && echo 2 entry=%entry% ENTRY=%ENTRY%
 if exist entry && if not %success%==Y && echo -n > (md)%mdbase%+1 && raw dd if=%device%%0+%devsect% of=(md)%mdbase%+1 bs=1 count=0x20 skip=%entry% > nul && set success=Y
-if %~2==echo && echo 3 clusnum=%clusnum% bytedone=%bytedone% root=%root% dataarea=%dataarea% entry=%entry% ENTRY=%ENTRY% success=%success%
+if "%~2"=="echo" && echo 3 clusnum=%clusnum% bytedone=%bytedone% root=%root% dataarea=%dataarea% entry=%entry% ENTRY=%ENTRY% success=%success%
 if not exist entry && if exist clusnum && if %bytedone%>=%dataarea% && call :lookupFAT "%clusnum%" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; set offset=%bytedone% && set search=%dirlen% && set /A endentry=%bytedone%+%dirlen%-0x20 && goto :findfileloop
 #org#if not exist entry && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && if exist clusnum &; call :lookupFAT "%clusnum%" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% && goto :findfileloop
-if %~2==echo && echo 4 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% entry=%entry% ENTRY=%ENTRY% lfnindex=%lfnindex% && pause
+if "%~2"=="echo" && echo 4 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% entry=%entry% ENTRY=%ENTRY% lfnindex=%lfnindex% && pause
 if exist entry && set sfnfile=%name%%%ext%
 endlocal && set success=%success% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set entry=%entry% && set ENTRY=%ENTRY% && set sfnpath=%sfnpath% && set sfnfile=%sfnfile% && set lfnindex=%lfnindex% && set lastclus=%lastclus% && set chainlen=%chainlen%
-if %~2==echo && echo 5 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% entry=%entry% ENTRY=%ENTRY% lfnindex=%lfnindex% && pause
+if "%~2"=="echo" && echo 5 clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% entry=%entry% ENTRY=%ENTRY% lfnindex=%lfnindex% && pause
 goto :eof
 
 :findsfn
-if %~3==echo && echo %0: %* "lfn=%~1"
+if "%~3"=="echo" && echo %0: %* "lfn=%~1"
 setlocal
 set chainlen=%clussize%
 set "lfn=%~1" &; set /a lfnlen=%@retval%
 if %lfnlen%<=13 && set n=1 ! if %lfnlen%<=26 && set n=2 ! if %lfnlen%<=39 && set n=3 ! if %lfnlen%<=52 && set n=4 ! if %lfnlen%<=65 && set n=5 ! if %lfnlen%<=78 && set n=6 ! if %lfnlen%<=91 && set n=7 ! if %lfnlen%<=104 && set n=8 ! if %lfnlen%<=117 && set n=9 ! if %lfnlen%<=130 && set n=10 ! if %lfnlen%<=143 && set n=11 ! if %lfnlen%<=156 && set n=12 ! if %lfnlen%<=169 && set n=13 ! if %lfnlen%<=182 && set n=14 ! if %lfnlen%<=195 && set n=15 ! if %lfnlen%<=208 && set n=16 ! if %lfnlen%<=221 && set n=17 ! if %lfnlen%<=234 && set n=18 ! if %lfnlen%<=247 && set n=19 ! if %lfnlen%<=255 && set n=20
 set /A c=1 && set i=1 && set l=0 && set "lfnorg=%lfn%" && set lfnnum=1 && set lfndone=%bytedone% && set clustail=%dirlen%
-if %~3==echo && echo clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% lfn=%lfn% lnflen=%lfnlen% n=%n% c=%c% i=%i% l=%l%
+if "%~3"=="echo" && echo clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% lfn=%lfn% lnflen=%lfnlen% n=%n% c=%c% i=%i% l=%l%
 set entry= && set sfn= && set lfnent01= && set ENTRY= && set clusnum0= && set clusnum1= && set lfnbyteA= && set lfnbyteB= && set success= && set clusnum2=
 :loopfindLFN
 set lfnentry= && set entryA= && set entryB= && set entryC= && set LFNA= && set LFNB= && set LFNC= && set ordinal= && set skipentr= && set sfnfile=
 #ORG#set lfnentry= && set entryA= && set entryB= && set entryC= && set LFNA= && set LFNB= && set LFNC= && set ordinal= && set skipentr=
-if %~3==echo && echo n=%n% c=%c% i=%i% l=%l%
+if "%~3"=="echo" && echo n=%n% c=%c% i=%i% l=%l%
 if %c%==%n% && set /A ordinal=%c%+0x40 &; set ordinal=\x%ordinal:~2%
 if not %c%>=%n% &; if %c%<=15 && set ordinal=\x0%c:~2% ! set ordinal=\x%c:~2%
 setlocal && set * && set "lfn=%lfn%" && set lfnlen=%lfnlen% && set ordinal=%ordinal% && set i=%i% && set l=%l% && set c=%c% && set checksum=%checksum%
 :loopsetLFNABC
 call set "LFN%i%=%^lfn:~%l%,1%" &; if exist LFN%i% && call set "LFN%i%=%^LFN%i%%%\x00"
-if %~3==echo && call echo LFN%i%=%^LFN%i%%%
+if "%~3"=="echo" && call echo LFN%i%=%^LFN%i%%%
 set /a l=%l%+1 && set /a i=%i%+1 &; if %i%<=13 && goto :loopsetLFNABC
 if exist LFN5 && set "LFNA=%ordinal%%%LFN1%%%LFN2%%%LFN3%%%LFN4%%%LFN5%\x0F\x00" ! if exist LFN4 && set "LFNA=%ordinal%%%LFN1%%%LFN2%%%LFN3%%%LFN4%\x00\x00\x0F\x00" ! if exist LFN3 && set "LFNA=%ordinal%%%LFN1%%%LFN2%%%LFN3%\x00\x00\xFF\xFF\x0F\x00" ! if exist LFN2 && set "LFNA=%ordinal%%%LFN1%%%LFN2%\x00\x00\xFF\xFF\xFF\xFF\x0F\x00" ! if exist LFN1 && set "LFNA=%ordinal%%%LFN1%\x00\x00\xFF\xFF\xFF\xFF\xFF\xFF\x0F\x00"
 if exist checksum && set "LFNA=%LFNA%\x%checksum%"
 if exist LFN11 && set "LFNB=%LFN6%%%LFN7%%%LFN8%%%LFN9%%%LFN10%%%LFN11%" ! if exist LFN10 && set "LFNB=%LFN6%%%LFN7%%%LFN8%%%LFN9%%%LFN10%\x00\x00" ! if exist LFN9 && set "LFNB=%LFN6%%%LFN7%%%LFN8%%%LFN9%\x00\x00\xFF\xFF" ! if exist LFN8 && set "LFNB=%LFN6%%%LFN7%%%LFN8%\x00\x00\xFF\xFF\xFF\xFF" ! if exist LFN7 && set "LFNB=%LFN6%%%LFN7%\x00\x00\xFF\xFF\xFF\xFF\xFF\xFF" ! if exist LFN6 && set "LFNB=%LFN6%\x00\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF" ! if exist LFN5 && set "LFNB=\x00\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF" ! set "LFNB=\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
 if exist LFN13 && set "LFNC=\x00\x00%LFN12%%%LFN13%" ! if exist LFN12 && set "LFNC=\x00\x00%LFN12%\x00\x00" ! if exist LFN11 && set "LFNC=\x00\x00\x00\x00\xFF\xFF" ! set "LFNC=\x00\x00\xFF\xFF\xFF\xFF"
 endlocal && set "LFNA=%LFNA%" && set "LFNB=%LFNB%" && set "LFNC=%LFNC%"
-if %~3==echo && if %c%==%n% && echo LFNENTRY%c:~2%=%LFNA%%%LFNB%%%LFNC%
-if %~3==echo && echo LFNA=%LFNA% LFNB=%LFNB% LFNC=%LFNC%
+if "%~3"=="echo" && if %c%==%n% && echo LFNENTRY%c:~2%=%LFNA%%%LFNB%%%LFNC%
+if "%~3"=="echo" && echo LFNA=%LFNA% LFNB=%LFNB% LFNC=%LFNC%
 if %mode:~0,7%==makelfn && goto :eof
 if exist LFNA if exist LFNB if exist LFNC |; endlocal && set "message=Problem with var LFNA/B/C" && set lfnentry= && goto :eof
 raw cat --skip=%lfndone% --locatei="%LFNA%" --length=%clustail% --number=1 %device%%0+%devsect% | set entryA= &; if exist entryA && set entryA=0x%entryA% &; set /A skipentr=%entryA%+14 &; raw cat --skip=%skipentr% --locatei="%LFNB%" --length=26 %device%%0+%devsect% | set entryB= &; if exist entryB && set entryB=0x%entryB% &; set /A skipentr=%entryB%+12 &; raw cat --skip=%skipentr% --locatei="%LFNC%" --length=6 %device%%0+%devsect% | set entryC= &; if exist entryC && set entryC=0x%entryC% &; set /A lfnentry=%entryC%-26
@@ -1501,10 +1551,10 @@ if exist lfnentry && if %c%==1 &; if %mode:~3%==lfnentry && if %~2==file && set 
 if exist lfnentry && if not %c%>=%n% && if %lfnentry%==%bytedone% &; if not exist lfnbyteA && set lfnbyteA=%lfnentry% ! if not exist lfnbyteB && set lfnbyteB=%lfnentry%
 if exist lfnentry && if not %c%>=%n% && if %lfnentry%==%bytedone% && if %bytedone%>=%dataarea% &; if exist clusnum1 && set clusnum=%clusnum1% && set /A lfndone=%clusnum1% - 0x2 * %clussize% + %dataarea% && set /A clustail=%clussize% ! if exist clusnum0 && set clusnum=%clusnum0% && set /A lfndone=%clusnum0% - 0x2 * %clussize% + %dataarea% && set /A clustail=%clussize%
 if exist lfnentry && if not %c%>=%n% && if %lfnentry%==%bytedone% &; set bytedone=%lfndone% && set dirlen=%clustail% &; set /A lfndone=%bytedone%+%dirlen%
-if %~3==echo && echo lfnentry=%lfnentry% c=%c% n=%n% clusnum=%clusnum% clusnum1=%clusnum1% clusnum0=%clusnum0% clusnum2=%clusnum2% lfnent01=%lfnent01% bytedone=%bytedone% dirlen=%dirlen% lfndone=%lfndone% clustail=%clustail% entry=%entry% checksum=%checksum% sfn=%sfn%
+if "%~3"=="echo" && echo lfnentry=%lfnentry% c=%c% n=%n% clusnum=%clusnum% clusnum1=%clusnum1% clusnum0=%clusnum0% clusnum2=%clusnum2% lfnent01=%lfnent01% bytedone=%bytedone% dirlen=%dirlen% lfndone=%lfndone% clustail=%clustail% entry=%entry% checksum=%checksum% sfn=%sfn%
 if exist lfnentry && if not %c%>=%n% && if not %lfndone%<=%bytedone% && set /A c=%c%+1 && set i=1 && set l=0 && set "lfn=%lfn:~13%" && set /A lfndone=%lfndone%-0x20 && set clustail=0x20 && goto :loopfindLFN
-if %~3==echo && echo LFNA=%LFNA% lfnentry=%lfnentry% c=%c% n=%n% clusnum=%clusnum% clusnum2=%clusnum2% clusnum1=%clusnum1% clusnum0=%clusnum0% lfnent01=%lfnent01%
-if %~3==echo && echo entry=%entry% entryA=%entryA% entryB=%entryB% entryC=%entryC% skipentr=%skipentr% lfnentry=%lfnentry% c=%c% n=%n% lfndone=%lfndone% clustail=%clustail%
+if "%~3"=="echo" && echo LFNA=%LFNA% lfnentry=%lfnentry% c=%c% n=%n% clusnum=%clusnum% clusnum2=%clusnum2% clusnum1=%clusnum1% clusnum0=%clusnum0% lfnent01=%lfnent01%
+if "%~3"=="echo" && echo entry=%entry% entryA=%entryA% entryB=%entryB% entryC=%entryC% skipentr=%skipentr% lfnentry=%lfnentry% c=%c% n=%n% lfndone=%lfndone% clustail=%clustail%
 if not exist lfnentry && if exist lfnent01 &; if not %clusnum%==%clusnum1% if not %clusnum%==%clusnum0% |; set clusnum1= && set clusnum0=
 #NEW# lfnbyteA can below ultimate lfnentry!
 if not exist lfnentry && if exist lfnbyteA && set lfnbyteA=
@@ -1514,10 +1564,10 @@ if not exist lfnentry && set entry= && set sfn= && if exist lfnent01 &; if %byte
 if not exist lfnentry && set entry= &; if exist entryA && setlocal && set /A bytemax=%bytedone%+%dirlen% && set /A lfndone=%c% * 32 + %entryA% &; set /A clustail=%bytemax%-%lfndone% &; endlocal && set lfndone=%lfndone% && set clustail=%clustail% &; set entryA= && if %clustail%>=0x20 && set "lfn=%lfnorg%" && set /a lfnnum=%lfnnum%+1 && set /A c=0x1 && set i=1 && set l=0 && goto :loopfindLFN
 if exist lfnentry && if exist entry && call :getsfnfilename &; if exist sfnfile && if %~2==dir && set sfnpath=%sfnpath%%%sfnfile%/ &; if exist %device%%%sfnpath:~0,-1% && endlocal && set sfn= && set sfnpath= && set "message=%device%%%sfnpath% not found" && set lfnentry= && goto :eof
 #BAD???#if exist lfnentry && if exist entry && call :getsfnfilename &; if exist sfnfile && if %~2==dir && set sfnpath=%sfnpath%%%sfnfile%/ &; if exist %device%%%sfnpath:~0,-1% && endlocal && set sfn= && set sfnpath= && set "message=%device%%%sfnpath% not found" && set lfnentry= && goto :eof
-if %~3==echo && if exist lfnentry && raw cat --hex --skip=%lfnentry% --length=96 %device%%0+%devsect%
+if "%~3"=="echo" && if exist lfnentry && raw cat --hex --skip=%lfnentry% --length=96 %device%%0+%devsect%
 if exist lfnentry && if exist entry && echo -n > (md)%mdbase%+1 && raw dd if=%device%%0+%devsect% of=(md)%mdbase%+1 bs=1 count=0x20 skip=%entry% > nul && set success=Y
 #BUGGY#if exist lfnentry && if exist entry && echo -n > (md)%mdbase%+%clussect% && raw dd if=%device%%0+%devsect% of=(md)%mdbase%+1 bs=1 count=0x20 skip=%entry% > nul && set success=Y
-if %~3==echo && echo A success=%success% clusnum=%clusnum% clusnum1=%clusnum1% clusnum0=%clusnum0%
+if "%~3"=="echo" && echo A success=%success% clusnum=%clusnum% clusnum1=%clusnum1% clusnum0=%clusnum0%
 if %~2==dir && if %success%==Y && set /A address=%basemem%+0x1A && set clusnumH=0x0
 if %~2==dir && if %success%==Y && if /i %filesys%==fat32 && read %address% &; set /A clusnumL=%@retval%&0xffff &; set clusnumL=0000%clusnumL:~2% && set /A address=%address%-0x6 &; read %address% &; set /A clusnumH=%@retval%&0xffff
 if %~2==dir && if %success%==Y && if /i %filesys%==fat32 &; if %clusnumH%==0x0 && set /A clusnum=0x%clusnumL:~-4,4% ! set clusnum=%clusnumH%%%clusnumL:~-4,4%
@@ -1525,14 +1575,15 @@ if %~2==dir && if %success%==Y && if not /i %filesys%==fat32 && read %address% &
 if %mode:~3%==lfnentry && if %~2==file && if not exist lfnentry && if %bytedone%>=%dataarea% &; if not exist clusnum0 && set clusnum0=%clusnum% ! if not exist clusnum1 && set clusnum1=%clusnum% ! set clusnum0=%clusnum1% && set clusnum1=%clusnum%
 if not %mode:~3%==lfnentry && if not exist entry && if %bytedone%>=%dataarea% &; if not exist clusnum0 && set clusnum0=%clusnum% ! if not exist clusnum1 && set clusnum1=%clusnum% ! set clusnum0=%clusnum1% && set clusnum1=%clusnum%
 if %mode:~3%==lfnentry && if %~2==dir && if not exist entry && if %bytedone%>=%dataarea% &; if not exist clusnum0 && set clusnum0=%clusnum% ! if not exist clusnum1 && set clusnum1=%clusnum% ! set clusnum0=%clusnum1% && set clusnum1=%clusnum%
-if %~3==echo && echo B success=%success% clusnum=%clusnum% clusnum1=%clusnum1% clusnum0=%clusnum0%
+if "%~3"=="echo" && echo B success=%success% clusnum=%clusnum% clusnum1=%clusnum1% clusnum0=%clusnum0%
 if %mode:~3%==lfnentry && if %~2==file && if not exist lfnentry && if exist clusnum && if not %clusnum%==0 && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && set lastclus=%clusnum% && call :lookupFAT "%clusnum%" "%~3" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; set lfndone=%bytedone% && set clustail=%dirlen% && set "lfn=%lfnorg%" && set lfnnum=%lfnnum%+1 && set /A c=0x1 && set i=1 && set l=0 && goto :loopfindLFN
 if not %mode:~3%==lfnentry && if not exist entry && if exist clusnum && if not %clusnum%==0 && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && set lastclus=%clusnum% && call :lookupFAT "%clusnum%" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; set lfndone=%bytedone% && set clustail=%dirlen% && set "lfn=%lfnorg%" && set lfnnum=%lfnnum%+1 && set /A c=0x1 && set i=1 && set l=0 && goto :loopfindLFN
 if %mode:~3%==lfnentry && if %~2==dir && if not exist entry && if exist clusnum && if not %clusnum%==0 && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && set lastclus=%clusnum% && call :lookupFAT "%clusnum%" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; set lfndone=%bytedone% && set clustail=%dirlen% && set "lfn=%lfnorg%" && set lfnnum=%lfnnum%+1 && set /A c=0x1 && set i=1 && set l=0 && goto :loopfindLFN
 if exist lfnentry && if exist entry && if %success%==Y && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize%
 if not %~2==file && set lfnentry=
 if %mode:~3%==lfnentry && if %~2==file && if %bytedone%>=%dataarea% &; if %clusnum%>=2 && set lastclus=%clusnum% ! if exist clusnum1 && set lastclus=%clusnum1% ! if exist clusnum0 && set lastclus=%clusnum0% ! set lastclus=
-if %~3==echo && echo Leaving %0: clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% clusnum0=%clusnum0% clusnum1=%clusnum1% lastclus=%lastclus% lfnentry=%lfnentry% lfnbyteA=%lfnbyteA% lfnbyteB=%lfnbyteB% lfnent01=%lfnent01% success=%success% $[0xF0]sfn=%sfn% $[0x07]entry=%entry% name=%name% ext=%ext% n=%n% && pause
+if "%~3"=="echo" && echo $[0x00]"$[0x07]Leaving %0: clusnum=%clusnum% bytedone=%bytedone% dirlen=%dirlen% clusnum0=%clusnum0% clusnum1=%clusnum1% lastclus=%lastclus% lfnentry=%lfnentry% lfnbyteA=%lfnbyteA% lfnbyteB=%lfnbyteB% lfnent01=%lfnent01% success=%success% $[0xF0]sfn=%sfn% $[0x07]entry=%entry% name=%name% ext=%ext% n=%n%
+#pause
 endlocal && set "sfn=%sfn%" && set entry=%entry% && set bytedone=%bytedone% && set dirlen=%dirlen% && set clusnum=%clusnum% && set success=%success% && set sfnfile=%sfnfile% && set sfnpath=%sfnpath% && set lfnentry=%lfnentry% && set lfnent01=%lfnent01% && set lfnbyteA=%lfnbyteA% && set lfnbyteB=%lfnbyteB% && set lastclus=%lastclus% && set chainlen=%chainlen% && set n=%n%
 goto :eof
 
@@ -1542,16 +1593,17 @@ set /A endentry=%bytedone%+%dirlen%-0x20
 if %lfnent01%==%endentry% && if exist clusnum && if %bytedone%>=%dataarea% && if not %bytedone%>=%devsize% && call :lookupFAT "%clusnum%" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; set entry=%bytedone% && set lfndone=%bytedone% && set clustail=%dirlen% && set clusnum2=%clusnum%
 if not %clusnum%>=2 && set clusnum=%clusnum2%
 if not exist entry && set /A entry=%lfnent01%+0x20
+raw cat --skip=%entry% --locate=\x25 --length=11 %device%%0+%devsect% > nul && endlocal && set clusnum=0 && set entry= && set "message=Char "%" in Short File Names not supported" && goto :eof
 raw cat --skip=%entry% --length=11 %device%%0+%devsect% | set sfn=
-if %~1==echo && raw cat --hex --skip=%entry% --length=0x20 %device%%0+%devsect%
+if "%~1"=="echo" && raw cat --hex --skip=%entry% --length=0x20 %device%%0+%devsect%
 #NoDiff#if exist sfn && call :getsfnfilename &; if exist sfnfile && call :sfnchecksum "%sfnfile%"
 if exist sfn && call :sfnchecksum "%sfn%" "%~1"
-if %~1==echo && echo sfn=$[0xF0]%sfn%$[0x07] checksum=%checksum% entry=%entry% name=%name% ext=%ext% lfn=%lfn%
-if %~1==echo && raw cat --hex --skip=%lfnent01% --length=0x20 %device%%0+%devsect%
+if "%~1"=="echo" && echo $[0x00]"$[0x07]sfn=$[0xF0]%sfn%$[0x07] checksum=%checksum% entry=%entry% name=%name% ext=%ext% lfn=%lfn%
+if "%~1"=="echo" && raw cat --hex --skip=%lfnent01% --length=0x20 %device%%0+%devsect%
 if exist checksum && set /A skipsum=%lfnent01%+0xD
 if exist checksum && raw cat --skip=%skipsum% --locate=\x%checksum% --length=1 %device%%0+%devsect% > nul && set lfncheck=Y
 if not %lfncheck%==Y && set /A lfndone=%entry%+0x20 && set entry= && set /A clustail=%clustail%-0x20
-if %~1==echo && echo skipsum=%skipsum% lfncheck=%lfncheck% entry=%entry% lfndone=%lfndone% lfnent01=%lfnent01%
+if "%~1"=="echo" && echo skipsum=%skipsum% lfncheck=%lfncheck% entry=%entry% lfndone=%lfndone% lfnent01=%lfnent01%
 endlocal && set "sfn=%sfn%" && set entry=%entry% && set checksum=%checksum% && set lfncheck=%lfncheck% && set bytedone=%bytedone% && set dirlen=%dirlen% && set clusnum=%clusnum% && set lfndone=%lfndone% && set clustail=%clustail% && set lfnentry=%lfnentry% && set lfnent01=%lfnent01% && set clusnum2=%clusnum2%
 goto :eof
 
@@ -1567,19 +1619,20 @@ endlocal && set sfnfile=%sfnfile%
 goto :eof
 
 :sfnchecksum
-if %~2==echo && echo %0 %*
+if "%~2"=="echo" && echo %0 %*
 setlocal
 if not "%~1"=="" && set "sfn=%~1"
-if %~2==echo && echo 1 sfn=%sfn%
+if "%~2"=="echo" && echo 1 sfn=%sfn%
 if not exist sfn && call :catfile "%name%%%ext%" &; if not exist ENTRY && endlocal && set checksum= && goto :eof
 if exist sfn && set "ENTRY=%sfn%"
-if %~2==echo && echo 2 sfn=%sfn% ENTRY=%ENTRY%
+if "%~2"=="echo" && echo 2 sfn=%sfn% ENTRY=%ENTRY%
 echo -e $[0x07]%ENTRY% > (md)%mdbase%+1
 raw cat --hex --skip=0 --length=11 (md)%mdbase%+1 | set hexsfn=
-if %~2==echo && echo 3 hexsfn=%hexsfn%
+if "%~2"=="echo" && echo 3 hexsfn=%hexsfn%
+call Fn.11 "%hexsfn%" "25" && endlocal && set checksum= && set "message=Char "%" in Short File Names not supported" && goto :eof
 if exist hexsfn && setlocal && set sum= && echo -e \x2000\x20%hexsfn:~9,35% | call :checksumSFN &; endlocal && set checksum=%sum:~2%
 if 0x%checksum%<=0xF && set checksum=0%checksum%
-if %~2==echo && echo 4 sfn=%sfn% checksum=%checksum% && pause
+if "%~2"=="echo" && echo 4 sfn=%sfn% checksum=%checksum% && pause
 endlocal && set checksum=%checksum%
 goto :eof
 
@@ -1610,12 +1663,24 @@ calc %sum% % 2 || set /A rotate=%sum%/2
 goto :checksumSFN
 
 :checkforbiddenchars
-if not %~2==echo if not %~3==echo || set echo=echo && echo %0 %*
+if not "%~2"=="echo" if not "%~3"=="echo" || set echo=echo && echo %0 "%*"
 setlocal && set *
-#echo A %0 "name=%~1"
 set forbiden=Y &; call Fn.11 "%~1" "\x22" || set forbiden=
 #TEST# call Fn.11 has 'if'-properties with 'call Fn.11 "%var%" "chars" && cmdA ! cmdB'
+#echo A %^~1="%~1" forbiden=%forbiden%
 if not %forbiden%==Y && set forbiden=Y &; call Fn.11 "%~1" "%" || set forbiden=
+#echo B %^~1="%~1" forbiden=%forbiden%
+if not %forbiden%==Y && call Fn.11 "%~1" "\x01" && set forbiden=Y
+#NOTGOOD#if not %forbiden%==Y && call Fn.11 "%~1" "%c" && set forbiden=Y
+#NOTGOOD#if not %forbiden%==Y && call Fn.11 "%~1" "%s" && set forbiden=Y
+#NOTGOOD#if not %forbiden%==Y && call Fn.11 "%~1" "%u" && set forbiden=Y
+#NOTGOOD#if not %forbiden%==Y && call Fn.11 "%~1" "%x" && set forbiden=Y
+#NOTGOOD#if not %forbiden%==Y && call Fn.11 "%~1" "%X" && set forbiden=Y
+#ONEinstanceONLY??#if not %forbiden%==Y && call Fn.11 "%~1" "3551489" && set forbiden=Y
+#ONEinstanceONLY??#if not %forbiden%==Y && call Fn.11 "%~1" "363101" && set forbiden=Y
+#NOTGOODFOR_%s_\xCC_\x0F_too#if not %forbiden%==Y && call Fn.11 "%~1" "\xE9" && set forbiden=Y
+#echo C %^~1="%~1" forbiden=%forbiden% && pause
+if not %forbiden%==Y && set forbiden=Y &; call Fn.11 "%~1" "$[0x" || set forbiden=
 if not %forbiden%==Y && set forbiden=Y &; call Fn.11 "%~1" "|" || set forbiden=
 if not %forbiden%==Y && set forbiden=Y &; call Fn.11 "%~1" ">" || set forbiden=
 if not %forbiden%==Y && set forbiden=Y &; call Fn.11 "%~1" "\a" || set forbiden=
@@ -1632,12 +1697,12 @@ call Fn.11 "%~1" "*" && endlocal && set forbiden=Y && goto :eof
 call Fn.11 "%~1" ":" && endlocal && set forbiden=Y && goto :eof
 call Fn.11 "%~1" "<" && endlocal && set forbiden=Y && goto :eof
 call Fn.11 "%~1" "?" && endlocal && set forbiden=Y && goto :eof
-if %mode%==makelfn && echo -n > (md)%mdbase%+1 && pause --wait=0 "%~1" > (md)%mdbase%+1 && raw cat --locate=\x5C (md)%mdbase%+1 > nul && set forbiden=Y
+#LATER#if %mode%==makelfn && echo -n > (md)%mdbase%+1 && pause --wait=0 "%~1" > (md)%mdbase%+1 && raw cat --locate=\x5C (md)%mdbase%+1 > nul && set forbiden=Y
 #ORG#if %mode%==makelfn && echo -n > (md)%mdbase%+1 && pause --wait=0 %~1 > (md)%mdbase%+1 && raw cat --locate=\x5C (md)%mdbase%+1 > nul && set forbiden=Y
 #BADTOO#call Fn.11 "%~1" " " || call Fn.11 "%~1" "\x5C" && endlocal && set forbiden=Y && goto :eof
 ## Removes'\'-sameas'\ '#echo -e "$[0x07]%~1" | set arg=
 #TODO??#if /i %mode%==makelfn && set forbiden=Y && set /u "arg=#%#~1" &; call Fn.11 "%arg%" "CON" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || call Fn.11 "%arg%" "" || set forbiden=
-if %echo%==echo && echo "%~1" forbiden=%forbiden% && pause
+if "%echo%"=="echo" && echo "%~1" forbiden=%forbiden% && pause
 endlocal && set forbiden=%forbiden%
 goto :eof
 
@@ -1659,7 +1724,7 @@ goto :eof
 
 :findpath
 setlocal
-if not %~2==echo if not %~3==echo || set echo=echo
+if not "%~2"=="echo" if not "%~3"=="echo" || set echo=echo
 set "path=%~1"
 if /i %filesys%==fat32 && set bytedone=%dataarea% && set /A dirlen=%clussize%
 if not /i %filesys%==fat32 && set bytedone=%root% && set /A dirlen=%dataarea%-%root%
@@ -1670,8 +1735,8 @@ call Fn.11 "%path%" " " && call :lsspaces "%echo%"
 raw cat --locate=/ --replace=\x20 (md)%mdbase%+1 > nul
 raw cat --locate=\x22 --replace=\x20 (md)%mdbase%+1 > nul
 if %echo%==echo && echo %0 path=%path% filesys=%filesys%
-set clusnum=2 && set sfnpath=/ && cat (md)%mdbase%+1 | call :finddirectory
-#BAD?#set clusnum=0 && set sfnpath=/ && cat (md)%mdbase%+1 | call :finddirectory
+set clusnum=2 && set sfnpath=/ && raw cat (md)%mdbase%+1 | call :finddirectory
+#BAD?#set clusnum=0 && set sfnpath=/ && raw cat (md)%mdbase%+1 | call :finddirectory
 endlocal && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set entry=%entry% && set sfnfile=%sfnfile% && set sfnpath=%sfnpath% && set lfnentry=%lfnentry% && set chainlen=%chainlen% && set "message=%message%"
 goto :eof
 
@@ -1694,14 +1759,19 @@ set /A skip=%skip% + 2
 goto :looplsspaces
 
 :finddirectory
-if "%1"=="" && goto :eof
+#echo %0 $[0x00]"$[0x07]%*
+if "%~1"=="" && goto :eof
+#ORG#if "%1"=="" && goto :eof
 set chainlen=%clussize%
 if %echo%==echo && echo %*
 set "argname=%~n1" && set "argext=%~x1"
 ## Still dangerous with names with include \n , \t , \r : Call Fn.11 cannot found "\" - only \t etc
-echo -e "%argname%" | set argname= &; set "argname=%argname:~1,-1%" && if exist argext && echo -e %argext% | set argext=
+echo -e "%argname%" | set argname= &; set "argname=%argname:~1,-1%" ;; if exist argext && echo -e "%argext%" | set argext= &; set "argext=%argext:~1,-1%"
 #ORG#echo -e $[0x07]%argname% | set argname= && echo -e $[0x07]%argext% | set argext=
-call Fn.11 "%argname:~0,1%" "\xE5" && echo -e \x05%argname:~1% | set argname=
+#echo 1 "argname=%argname%" "argext=%argext%"
+call Fn.11 "%argname:~0,1%" "\xE5" && echo -e "\x05%argname:~1%" | set argname= &; set "argname=%argname:~1,-1%"
+#ORG#call Fn.11 "%argname:~0,1%" "\xE5" && echo -e \x05%argname:~1% | set argname=
+#echo 2 "argname=%argname%" "argext=%argext%"
 set SFN= &; call :checksfn "%argname%%%argext%"
 if not %SFN%==N && set sfnpath=%sfnpath%%%argname%%%argext%/ &; if not exist %device%%%sfnpath:~0,-1% && set ENTRY= && call :catfile "%argname%%%argext%" ! set bytedone= && set sfnpath= && set entry= && set "message=%device%%%sfnpath% not found" && goto :eof
 #org#:finddirectoryloop
@@ -1710,6 +1780,7 @@ set sfn= &; if %SFN%==N && call :findsfn "%argname%%%argext%" "dir" "%echo%" &; 
 if exist sfn && set argname= && set argext= && shift && goto :finddirectory
 set offset=%bytedone% && set search=%dirlen% && set /A endentry=%bytedone%+%dirlen%-0x20
 :finddirectoryloop
+#echo $[0x00]"$[0x07]:finddirectoryloop
 set entry= && set success= && set argname= && set argext=
 #debug#
 #DEBUG=STILLBAD#raw cat --skip=%offset% --locate="%ENTRY%" --length=%search% --number=1 %device%%0+%devsect% | set entry= &; if exist entry && set /A "entry=0x%entry%" &; if %entry%>=%offset% && echo %0 entry=%entry% &; calc 0x%entry:~-2,2% % 0x20 &; set /A offset=%entry%-%@retval%+0x20 &; if %offset%<=%endentry% && set /A search=%bytedone%-%offset%+%dirlen% && goto :finddirectoryloop ! set entry=
@@ -1733,7 +1804,7 @@ goto :finddirectory
 
 :lookupFAT
 setlocal
-if %~2==echo && echo %0 clusnum=%~1 lastclus=%lastclus% fat1=%fat1%
+if "%~2"=="echo" && echo %0 clusnum=%~1 lastclus=%lastclus% fat1=%fat1%
 set clusnum=%~1 &; set lastclus=%clusnum%
 if /i %filesys%==fat12 && set FATbytes=1.5 ! if /i %filesys%==fat16 && set FATbytes=2 ! if /i %filesys%==fat32 && set FATbytes=4
 if /i %filesys%==fat32 && set success= && set /A address=%clusnum% * %FATbytes% + %fat1% &; call :readendian "%address%" "%~2" &; set /A nextclus=%result%&0xffffffff &; set result= && if %nextclus%<=0xFFFFFF6 && set clusnum=%nextclus% ! set clusnum=0
@@ -1744,16 +1815,16 @@ if /i %filesys%==fat12 &; calc %lastclus% % 2 &; set /A address=%clusnum% / 2 + 
 #badifoutcomeofevenisodd#if /i %filesys%==fat12 &; calc %clusnum% % 2 &; set /A address=%clusnum% / 2 + %clusnum% + %fat1% && set even=N &; call :readendian "%address%" "%~2" &; set /A nextclus=%result%&0xffff>>4 &; set result= && if %nextclus%>=0xFF0 && set clusnum=0 ! set clusnum=%nextclus% && set "success=Done"
 if %clusnum%==1 && set clusnum=0 && set success=
 if %clusnum%>=2 && set /a chainlen=%chainlen%+%clussize% &; if %chainlen%>=2m && set clusnum=0
-if %~2==echo && echo clusnum=%clusnum% even=%even% success=%success%
+if "%~2"=="echo" && echo clusnum=%clusnum% even=%even% success=%success%
 endlocal && set clusnum=%clusnum% && set lastclus=%lastclus% && set chainlen=%chainlen%
 goto :eof
 
 :readendian
-if %~2==echo && echo %0 %*
+if "%~2"=="echo" && echo %0 %*
 setlocal && set * && set device=%device% && set devsect=%devsect%
 raw cat --hex --skip=%~1 --length=4 %device%%0+%devsect% | set litleend=
 set LE=%litleend:~10,11% &; set result=0x%LE:~9,2%%%LE:~6,2%%%LE:~3,2%%%LE:~0,2%
-if %~2==echo && echo result=%result% LE=%LE% litleend=%litleend:~0,21%
+if "%~2"=="echo" && echo result=%result% LE=%LE% litleend=%litleend:~0,21%
 endlocal && set result=%result%
 goto :eof
 
@@ -1819,7 +1890,7 @@ set /A dataarea=%rootbyte% + %fatbyte% + %rsrvbyte%
 set /A clussize=%secpclus% * %bytepsec%
 set /A fat1=%rsrvbyte%
 if exist fatbyte && set /A fat2=%fatbyte% / 2 + %rsrvbyte%
-if exist fat1 && cat --skip=%fat1% --locate=\x%mediabyt:~2% --length=1 %device%%0+%totsect% > nul || endlocal && set filesys= && set "message=Mediabyte %mediabyt% in fat1 does not match" && goto :eof
+if exist fat1 && raw cat --skip=%fat1% --locate=\x%mediabyt:~2% --length=1 %device%%0+%totsect% > nul || endlocal && set filesys= && set "message=Mediabyte %mediabyt% in fat1 does not match" && goto :eof
 #NOTTOBEUSED#if exist fat2 && cat --skip=%fat2% --locate=\x%mediabyt:~2% --length=1 %device%%0+%totsect% > nul || endlocal && set filesys= && set "message=Mediabyte %mediabyt% in fat1 does not match" && goto :eof
 set /A numclus=-%dataarea% / 0x200 + %totsect% / %secpclus%
 endlocal && set root=%root% && set dataarea=%dataarea% && set clussize=%clussize% && set fat1=%fat1% && set fat2=%fat2% && set secpfat=%secpfat% && set devsect=%totsect% && set secpclus=%secpclus% && set numclus=%numclus%
@@ -1840,15 +1911,15 @@ goto :eof
 :help
 set message=
 setlocal && set *
-if not %~2==echo if not %~3==echo || set echo=echo && echo %0 %*
+if not "%~2"=="echo" if not "%~3"=="echo" || set echo=echo && echo %0 %*
 set "file=%~f0"
 if /i "%~1"=="" && set mode=plus && set offset=5
 if /i "%~1"=="help" && if "%~2"=="" && set mode=plus && set offset=5
 if /i "%~1"=="help" && if "%~2"=="+" && set mode=plus && set offset=5
 if /i "%~1"=="help" && if not "%~2"=="" && set search=%~2 && set mode=search && set offset=4
-if "%mode%"=="plus" && cat --locate=\x23\x2D\x23\x2B\x20 %file% | call :showhelp
-if "%mode%"=="search" && cat --locatei=\x0A:%search:~0,14% %file% | call :showhelp
-#NOTOKE#if "%mode%"=="search" && cat --locatei=:%search:~0,15% %file% | call :showhelp
+if "%mode%"=="plus" && raw cat --locate=\x23\x2D\x23\x2B\x20 %file% | call :showhelp
+if "%mode%"=="search" && raw cat --locatei=\x0A:%search:~0,14% %file% | call :showhelp
+#NOTOKE#if "%mode%"=="search" && raw cat --locatei=:%search:~0,15% %file% | call :showhelp
 debug msg=3
 echo
 endlocal
@@ -1856,27 +1927,28 @@ goto :eof
 
 :showhelp
 if %echo%==echo && echo %0 %*
-if "%1"=="" && goto :eof
+if "%~1"=="" && goto :eof
+#ORG#if "%1"=="" && goto :eof
 if %mode%==search && set /a skip=0x%1+1
-if %mode%==search && cat --skip=%skip% --locate=#-#\x20 --length=40 --number=1 %file% > nul || shift && goto :showhelp
-if %mode%==search && cat --skip=%skip% --locate=\x0A --number=1 %file% > nul &; set /A start=%?%+%offset%+1
-if %mode%==search && cat --skip=%start% --locate=\x0A --number=1 %file% > nul &; set /A length=%?%+1
+if %mode%==search && raw cat --skip=%skip% --locate=#-#\x20 --length=40 --number=1 %file% > nul || shift && goto :showhelp
+if %mode%==search && raw cat --skip=%skip% --locate=\x0A --number=1 %file% > nul &; set /A start=%?%+%offset%+1
+if %mode%==search && raw cat --skip=%start% --locate=\x0A --number=1 %file% > nul &; set /A length=%?%+1
 if %mode%==search && if not exist length && goto :eof
 if %mode%==search && set /a length=%length%-%start%
-if %mode%==search && cat --skip=%start% --length=%length% %file%
+if %mode%==search && raw cat --skip=%start% --length=%length% %file%
 if %mode%==search && shift && set start= && set length= && goto :showhelp
 set /a skip=0x%1+%offset%
 cat --skip=%skip% --locate=\x0A --number=1 %file% > nul &; set length=%?%
 if not exist length && goto :eof
 set /a length=%length%-%skip%
-if not %mode%==search && cat --skip=%skip% --length=%length% %file% | echo $[0x0F]
-if %mode%==search && cat --skip=%skip% --locatei=\x20%search:~0,16% --length=%length% %file% > nul && cat --skip=%skip% --length=%length% %file%  | echo $[0x0F] && set found=Y
+if not %mode%==search && raw cat --skip=%skip% --length=%length% %file% | echo $[0x0F]
+if %mode%==search && raw cat --skip=%skip% --locatei=\x20%search:~0,16% --length=%length% %file% > nul && raw cat --skip=%skip% --length=%length% %file%  | echo $[0x0F] && set found=Y
 #
-#if %mode%==search && cat --skip=%skip% --locate=\x0A --number=1 %file% > nul &; set length=%?%
+#if %mode%==search && raw cat --skip=%skip% --locate=\x0A --number=1 %file% > nul &; set length=%?%
 #if %mode%==search && if not exist length && goto :eof
 #if %mode%==search && set /a length=%length%-%skip%
-#if %mode%==search && cat --skip=%skip% --locatei=%search:~0,15% --length=%length% %file% > nul && cat --skip=%skip% --length=%length% %file% && set found=Y && echo
-#if not %mode%==search && cat --skip=%skip% %file% | set thisline=
+#if %mode%==search && raw cat --skip=%skip% --locatei=%search:~0,15% --length=%length% %file% > nul && raw cat --skip=%skip% --length=%length% %file% && set found=Y && echo
+#if not %mode%==search && raw cat --skip=%skip% %file% | set thisline=
 #if not exist mode && echo %thisline%
 #if %mode%==help &; if "%thisline:~0,1%"=="+" && echo $[0x0F]%thisline:~2% ! echo %thisline%
 if %mode%==help && call :search
