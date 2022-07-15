@@ -1,4 +1,4 @@
-ATTRIBFT.LLL v0.7.1 (20220713), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+ATTRIBFT.LLL v0.7.1.1 (20220715), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
 Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -26,6 +26,9 @@ Grub4Dos only, should work on version 0.46a 2017-05-05 and upwards (Grub4Efi unt
 Simple debug echo-system still active: give 'echo' (without qoutes) as last argument to 'view' what is going on (in most funtions)
 
 ATTRIBFT.G4B is a simple Grub4Dos command-line frontend for ATTRIBFT.LLL, will sent arguments/ parameters to ATTRIBFT.LLL - must reside in same directory
+
+Changes V0.7.1.0.1:
+Out-remarked cat --hex at line 1108
 
 Changes V0.7.1:
 1) Bugfix in function 'getlfn' for Grub4dos operators ' && ', ' &; ', ' ;; ' and ' ! '
