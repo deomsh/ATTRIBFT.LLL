@@ -1105,7 +1105,7 @@ raw cat --skip=%offset% --locate=\x00 --length=%clus2len% %device%%0+%devsect% >
 if %result%==Y && setlocal && set /a chainmax=%chainlen%+%clussize%+%clussize% &; if %chainmax%>=2m && echo chainmax=%chainmax% && endlocal && set result= && set "message=Length of cluster-chain above 2MB" ! endlocal
 #BAD#if %result%==Y && setlocal && set /a chainmax=chainlen+%clussize%+%clussize% &; if %chainmax%>=2m && echo chainmax=%chainmax% && endlocal && set result= && set "message=Length of cluster-chain above 2MB" ! endlocal
 if "%~1"=="echo" && echo result=%result%
-raw cat --hex --skip=%offset% --length=32 %device%%0+%devsect% && pause offset=%offset% result=%result%
+#TEST#raw cat --hex --skip=%offset% --length=32 %device%%0+%devsect% && pause offset=%offset% result=%result%
 if "%~1"=="echo" && raw cat --hex --skip=%offset% --length=32 %device%%0+%devsect% && pause
 endlocal && set result=%result% && set "message=%message%"
 goto :eof
