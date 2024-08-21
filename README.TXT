@@ -5,7 +5,7 @@ Use: ATTRIBFT.LLL (without arguments) shows all function-names
 Use: ATTRIBFT.LLL <help> [<function-name>] <help function> gives specific help
 Mandatory Arguments: function FILE and function-specific parameter(s)
 Remark Mandatory Arguments: functionname not case sensitive, most functions too. Without device/ path on current ROOT
-Remark Long File Names: between double-quotes or use escaped spaces: '\ '. Double qoutes mandatory if using '='
+Remark Long File Names: between double-quotes or use escaped spaces: '\ '. (or '\=' if using '=')
 Remark Volume label: if searched give 8+3 filename. Uppercase supported only
 Remark Parameters: function-specific, AND after FILE
 Remark Returns: ONLY if 'success-variable' 'result' exists, content is function-specific. If any error: variable 'message' exists, containing textual error. Variable 'output' consists of set-variables, device-specific and mostly FAT-bootsector-specs
