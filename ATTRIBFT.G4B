@@ -1,11 +1,96 @@
 !BAT
-#-#+ ATTRIBFT.G4B v.0.2 (20220623), by deomsh
+#-#+ ATTRIBFT.G4B v.0.3 (20241009), by deomsh
 #-#+ Command-line frontend for ATTRIBFT.LLL
+setlocal
+debug status > nul ;; set /a debugsts=%@retval% > nul ;; debug 1
+pager status > nul ;; set /a pagersts=%@retval% > nul
 set result=
 set message=
+if "%~1"=="viewdir" && goto :viewdir
+if "%~1"=="viewentry" && goto :viewentry
 ATTRIBFT.LLL %*
-if exist result &; if "%result:~0,1%"==" " && echo $[0x00]"$[0xF0]%result%
-if exist result &; if not "%result:~0,1%"==" " && echo $[0x00]"$[0x07]%result%
-#ORG#if exist result && echo $[0x00]"$[0x07]%result%
+if exist result &; if "%result:~0,1%"==" " && echo $[0x00]"$[0xF0]%result%$[0x00]"
+if exist result &; if not "%result:~0,1%"==" " && echo $[0x00]"$[0x07]%result%$[0x00]"
+if exist message && echo $[0x00]"$[0x07]%message%$[0x00]"
+goto :eov
+::
+:viewdir
+setlocal && set *
+shift
+pager on
+call ATTRIBFT.LLL getsfnpath %* &; if not exist result && goto :endofviewdir ! set sfnpath=%result% && set result=
+%output%
+if "%sfnpath%"=="/" && if not /i %filesys%==fat32 && set sfnpath=
+set /u filesys=%filesys%
+if exist sfnpath && call ATTRIBFT.LLL getchainclus %* &; if not exist result && goto :endofviewdir ! set chainlen=%result% && set result=
+set counter=1 && if not exist sfnpath && set chainlen=1
+:viewdirloop
+if not %counter%<=%chainlen% && goto :endofviewdir
+if exist sfnpath && if %counter%<=%chainlen% && call ATTRIBFT.LLL getchainclus %* %counter% &; if not exist result && goto :endofviewdir ! set clusnum=%result% && set result=
+if exist sfnpath && set /A skip=%clusnum% - 2 * %clussize% + %dataarea% > nul && set cluslen=%clussize%
+if not exist sfnpath% && if exist root && set skip=%root% && set /A cluslen=%dataarea%-%root% > nul
+if exist sfnpath && echo Cluster %counter%/%chainlen% Cluster-number %clusnum% (%filesys%)
+if not exist sfnpath && if exist root && echo Root Directory (%filesys%)
+raw cat --hex --skip=%skip% --length=%cluslen% %checkdev%%0+%devsect%
+echo -n $[0x0F][Hit Q another time to quit 'viewdir', any other key to continue] && set keycode= &; pause --wait=180 --test-key > nul &; set /A keycode=%@retval% > nul
+if not %keycode%==0x1051 if not %keycode%==0x1071 || goto :endofviewdir
+call Fn.5 0 24
+echo -e -n \x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20 && echo
+set /a counter=%counter%+1 > nul && goto :viewdirloop
+:endofviewdir
 if exist message && echo $[0x00]"$[0x07]%message%
-goto :eof 
+if %pagerst%>=1 && pager on ! pager off
+endlocal
+goto :eov
+::
+:viewentry
+setlocal && set *
+shift
+pager on
+debug 1
+call ATTRIBFT.LLL getsfnpath %* &; debug msg=0 &; if not exist result && goto :endofviewentry ! set sfnpath=%result% && set result=
+%output%
+call ATTRIBFT.LLL getsfnentry %* &; debug msg=0 &; if exist result && set sfnentry=%result% && set result= ! set "sfnmsg=%message%" && set message=
+if exist sfnentry && setlocal && set * && set sfnentry=%sfnentry% && set "output=%output%" &; %output%
+if exist sfnentry && if %sfnentry%>=%dataarea% && set /a cluster=%sfnentry%-%dataarea%/%clussize%+2 > nul
+if exist sfnentry && set /A start=%cluster% - 2 * %clussize% + %dataarea% > nul
+if exist sfnentry &; calc %sfnentry% % %clussize% > nul || set "echo=echo"
+if exist sfnentry &; if exist root && set "clusmsg=echo ROOT starting at %root%" ! set "clusmsg=echo Cluster %cluster% starting at %start%"
+if exist sfnentry && endlocal && set "echo=%echo%" && set "clusmsg=%clusmsg%" && set message=
+if exist sfnentry && call ATTRIBFT.LLL attriballecho %* &; debug msg=0 &; if exist result && set "attrib=%result%" && set result= ! set "attrmsg=%message%" && set message=
+if exist sfnentry &; setlocal && set * && set "output=%output%" && set sfnentry=%sfnentry% &; %output% &; set /A address=%sfnentry%+28 > nul && set device=%checkdev% &; call :readdisk "%address%" &; endlocal && set result=%result% &; set /A hexsize=%result%&0xffffffff > nul && set /a decisize=%result%&0xffffffff > nul && set result= && set message= && set /u filesys=%filesys%
+if exist sfnentry && if not exist echo && set "catentry=raw cat --hex --skip=%sfnentry% --length=0x20 %checkdev%%0+%devsect% && echo %attrib% && echo Filesize %decisize% (HEX:%hexsize%) Byte(s)"
+if exist sfnentry && if exist echo && set "catentry=%clusmsg% && raw cat --hex --skip=%sfnentry% --length=0x20 %checkdev%%0+%devsect% && echo %attrib% && echo Filesize %decisize% (HEX:%hexsize%) Byte(s)"
+set /u filesys=%filesys%
+if not exist sfnentry && set "clusmsg=echo sfnentry of %sfnmsg% (%filesys%)"
+call ATTRIBFT.LLL getlfnentries %* &; debug msg=0 &; if not exist result && set "lfnmsg=%message%" && set message=
+%result% &; set result=
+if exist lfnentry && set /a cluster0=%lfnentry%-%dataarea%/%clussize%+2 &; set /A start0=%cluster0% - 2 * %clussize% + %dataarea% &; if %lfnentry%>=%dataarea% && set "clusmsg0=echo Cluster %cluster0% starting at %start0% (%filesys%)" ! set "clusmsg0=echo ROOT starting at %root% (%filesys%)"
+if exist lfnentryA && set /a clusterA=%lfnbyteA%-%dataarea%/%clussize%+2 &; set /A startA=%clusterA% - 2 * %clussize% + %dataarea% &; set "clusmsgA=echo Cluster %clusterA% starting at %startA%"
+if exist lfnentryB && set /a clusterB=%lfnbyteB%-%dataarea%/%clussize%+2 &; set /A startB=%clusterB% - 2 * %clussize% + %dataarea% &; set "clusmsgB=echo Cluster %clusterA% starting at %startB%"
+if exist lfnentry && if not exist lfnbyteA && if not exist lfnbyteB && set /a length=%n% * 0x20 &; set "result=%clusmsg0% && raw cat --hex --skip=%lfnentry% --length=%length% %checkdev%%0+%devsect%"
+if exist lfnentry && if exist lfnbyteA && if not exist lfnbyteB && set /a length2=%lfnent01%+0x20-%lfnbyteA% &; set /a length1=%n% * 0x20 - %length2% &; set "result=%clusmsg0% && raw cat --hex --skip=%lfnentry% --length=%length1% %checkdev%%0+%devsect% && %clusmsgA% && raw cat --hex --skip=%lfnbyteA% --length=%length2% %checkdev%%0+%devsect%"
+if exist lfnentry && if exist lfnbyteA && if exist lfnbyteB && set /a length3=%lfnent01%+0x20-%lfnbyteA% &; set length2=%clussize% && set /a length1=%n% * 0x20 - %length3% - %length2% &; set "result=raw cat --hex --skip=%lfnentry% --length=%length1% %checkdev%%0+%devsect% && %clusmsgB% && raw cat --hex --skip=%lfnbyteB% --length=%length2% %checkdev%%0+%devsect% && %clusmsgA% && raw cat --hex --skip=%lfnbyteA% --length=%length3% %checkdev%%0+%devsect%"
+if exist catentry && if exist lfnentry && set "result=%result% && %catentry%"
+if exist catentry && if not exist lfnentry && set "result=%clusmsg% (%filesys%) && %catentry%" && set message=
+if not exist catentry && if exist lfnentry && set "result=%result% && echo Orphaned Long File Name" && set message=
+if /i %filesys:~0,3%==fat && if not exist catentry && if not exist lfnentry && set "result=%clusmsg% && echo %lfnmsg% (%filesys%)"
+%result%
+:endofviewentry
+if exist message && echo $[0x00]"$[]%message%
+endlocal
+goto :eof
+::
+:readdisk
+setlocal && set * && set device=%device% && set devsect=%devsect% &; set /A skip=%~1 &; set /a s=%@retval%
+raw cat --hex --skip=%skip% --length=4 %device%%0+%devsect% | set LE= &; if %s%<=10 && set "LE=%LE:~10,11%" ! call set "LE=%^LE:~%s%,11%" &; if "%LE:~0,1%"==" " && set "LE=%LE:~1%"
+if not "%LE:~9,1%"==" " && set result=0x%LE:~9,2%%%LE:~6,2%%%LE:~3,2%%%LE:~0,2% ! if not "%LE:~6,1%"==" " && set result=0x%LE:~6,2%%%LE:~3,2%%%LE:~0,2% ! if not "%LE:~3,1%"==" " && set result=0x%LE:~3,2%%%LE:~0,2% ! if not "%LE:~0,1%"==" " && set result=0x%LE:~0,2%
+endlocal && set result=%result%
+goto :eof
+::
+:eov
+if %pagersts%>=1 && pager on ! pager off
+debug %debugsts%
+debug msg=3
+endlocal && set "result=%result%"
+goto :eof
