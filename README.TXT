@@ -1,4 +1,4 @@
-ATTRIBFT.LLL v0.7.1.0.1 (20220715), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+ATTRIBFT.LLL v0.8 (20241009), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
 Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -14,18 +14,32 @@ Remark Optional Arguments: order is NOT free, MUST given before FILE
 2 <input="%output%"> (only mandatory double-qoutes for second part!) for inserting predefined set-variables (with && ) to speed up operation
 
 List of Functions
-Attribute: getattrib; setattrib
+Attribute: getattrib; setattrib; getntcasebyte; setntcasebyte; geteapointer
 Date and Time: getdate; gettime; getaccdate; getcreadate; getcreatime; getdatetimeall; getdatetimeattriball; setdate; settime; setaccdate; setcreadate; setcreatime; setdatetime; setcreadatetime
 Service: attribecho; attriballecho; datetimeecho; datetimeallecho; datetimeattribecho
 Long File Names: getsfn; getsfnpath; getsfnfile; getlfn; makelfn; dellfn
-Special: isdir; isreadonly; getlabel; setlabelattrib; getntcasebyte; geteapointer; calcsfnchecksum; calclfnhash; getlastclusnum; getchainclus
+Special: isdir; isreadonly; getlabel; setlabelattrib; calcsfnchecksum; calclfnhash; getlastclusnum; getchainclus
 Internals: getsfnentry; getlfnentry; getlfnentries; getfreeentry; getfreeentries; getdelentry; getdelsfnentry; getlabelentry
 
-Grub4Dos only, should work on version 0.46a 2017-05-05 and upwards (Grub4Efi untested)
+Grub4Dos only, should work on version 0.46a 2017-05-05 and upwards (Grub4dos for UEFI is tested, boot rather soon 'out of malloc memory')
 
 Simple debug echo-system still active: give 'echo' (without qoutes) as last argument to 'view' what is going on (in most funtions)
 
-ATTRIBFT.G4B is a simple Grub4Dos command-line frontend for ATTRIBFT.LLL, will sent arguments/ parameters to ATTRIBFT.LLL - must reside in same directory
+Changes V0.8
+1) Improroved FAT-detection: number of root-entries checked for multiples of 16
+2) Some changes to content of message-system
+3) Help-system cleaned and with better outline (now about 60 examples)
+4) Variable 'result' for functions 'getsfn'. 'getsfnpath'. 'getsfnfile' now always uppercase
+5) Output formats changed, OR variable 'result' OR variable 'message' (now 'result=1' if 'value' already existed and not had to be set)
+6) After use 'debug msg=0' (no longer to ' debug msg=3')
+7) More value-formats accepted in label-functions
+8) Change of default 'mdbase' to 0x1FE00 [max 256k to 0x20000]
+9) New function: 'setntcasebyte' (to 0x0, 0,8, 0x10 or 0x18)
+10) Char '=' allowed in PATH
+11) Bugfix ignoring not existing directories in PATH if remaining PATH valid
+12) Read-out bytes on disk above 4GB
+13) Bugfix in parsing output of 'vol' if volumename contains wrong file system abbreviation
+14) Bugfix in function 'makelfn' if Long File Name already exist
 
 Changes V0.7.1.0.1:
 Out-remarked cat --hex at line 1108
@@ -54,3 +68,14 @@ Changes V0.6:
 2) faster execution of function 'getlfn'
 3) new function 'setlabelattrib'. For specs use: ATTRIBFT.LLL help setlabelattrib
 4) dropped function 'getnumclus', is contained in set-variable %output% anyway 
+
+
+ATTRIBFT.G4B is a simple Grub4Dos command-line frontend for ATTRIBFT.LLL, will sent arguments/ parameters to ATTRIBFT.LLL - must reside in same directory
+
+Changes V0.3:
+Bugfixes
+NEW: function 'viewentry' = 'cat --hex' ready to run, + FULL readout [%output% gives '%checkdev%' !]
+NEW: function 'viewdir' = 'cat --hex' ready to run, + FULL readout [%output% gives '%checkdev%' !]
+
+Changes V0.2:
+Highcol output for result if starting spaces in Long File Name
