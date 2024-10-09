@@ -14,11 +14,11 @@ Remark Optional Arguments: order is NOT free, MUST given before FILE
 2 <input="%output%"> (only mandatory double-qoutes for second part!) for inserting predefined set-variables (with && ) to speed up operation
 
 List of Functions
-Attribute: getattrib; setattrib; getntcasebyte; setntcasebyte; geteapointer
+Attributes: getattrib; setattrib; setlabelattrib
 Date and Time: getdate; gettime; getaccdate; getcreadate; getcreatime; getdatetimeall; getdatetimeattriball; setdate; settime; setaccdate; setcreadate; setcreatime; setdatetime; setcreadatetime
 Service: attribecho; attriballecho; datetimeecho; datetimeallecho; datetimeattribecho
 Long File Names: getsfn; getsfnpath; getsfnfile; getlfn; makelfn; dellfn
-Special: isdir; isreadonly; getlabel; setlabelattrib; calcsfnchecksum; calclfnhash; getlastclusnum; getchainclus
+Special: isdir; isreadonly; getlabel; getntcasebyte; setntcasebyte; geteapointer; calcsfnchecksum; calclfnhash; getlastclusnum; getchainclus
 Internals: getsfnentry; getlfnentry; getlfnentries; getfreeentry; getfreeentries; getdelentry; getdelsfnentry; getlabelentry
 
 Grub4Dos only, should work on version 0.46a 2017-05-05 and upwards (Grub4dos for UEFI is tested, boot rather soon 'out of malloc memory')
