@@ -1,5 +1,5 @@
 !BAT
-#-#+ ATTRIBFT.LLL v0.8 (20241009), by deomsh\n (subroutines :checksumSFN and :help originated by Wonko the Sane)
+#-#+ ATTRIBFT.LLL v0.8.1 (20241018), by deomsh\n (subroutines :checksumSFN and :help originated by Wonko the Sane)
 #-#+ Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes,\n volume special case\n Further: get/ set directory entries related to Short and Long File Names
 #-#+ Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 #-#+ Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -68,7 +68,7 @@
 #notyet##-# <setsfnchecksum> Writes given checksum of Short File Name to all corresponding LFN entries. Parameter: one hex-byte with leading 0x
 #notyet##-# <getlfnpath> Long File Name Path of existing full Short File Name Path, in FILE, returned
 #notyet##-# <dolfncheck> Checks if sfnentry follows directly after the LFN, and if checkum of Short File Name of 'file', in FILE, is written correctly in all LFN entries, returns IF ALL ARE EQUAL the checksum hex-byte with leading 0x
-if "%~1"=="" && clear && echo -e ATTRIBFT.LLL <function> [<mdbase=N-sectors>] [<input=\x22\x25output\x25\x22>] <FILE> [<parameters>] && echo && echo ATTRIBFT.LLL <help> [<function>] && echo && echo List of Functions && echo && echo Attribute: getattrib; setattrib; setlabelattrib && echo && echo Date and Time: getdate; gettime; getaccdate; getcreadate; getcreatime; getdatetimeall; getdatetimeattriball; setdate; settime; setaccdate; setcreadate; setcreatime; setdatetime; setcreadatetime && echo && echo Service: attribecho; attriballecho; datetimeecho; datetimeallecho; datetimeattribecho && echo && echo Long File Names: getsfn; getsfnpath; getsfnfile; getlfn; makelfn; dellfn && echo && echo Special: isdir; isreadonly; getlabel; getntcasebyte; setntcasebyte; geteapointer; calcsfnchecksum; calclfnhash; getlastclusnum; getchainclus && echo && echo Internals: getsfnentry; getlfnentry; getlfnentries; getfreeentry; getfreeentries; getdelentry; getdelsfnentry; getlabelentry && echo && goto :eof
+if "%~1"=="" && clear && echo -e ATTRIBFT.LLL <function> [<mdbase=N-sectors>] [<input=\x22\x25output\x25\x22>] <FILE> [<parameters>] && echo && echo ATTRIBFT.LLL <help> [<function>] && echo && echo List of Functions && echo && echo Attribute: getattrib; setattrib && echo && echo Date and Time: getdate; gettime; getaccdate; getcreadate; getcreatime; getdatetimeall; getdatetimeattriball; setdate; settime; setaccdate; setcreadate; setcreatime; setdatetime; setcreadatetime && echo && echo Service: attribecho; attriballecho; datetimeecho; datetimeallecho; datetimeattribecho && echo && echo Long File Names: getsfn; getsfnpath; getsfnfile; getlfn; makelfn; dellfn && echo && echo Special: isdir; isreadonly; getlabel; setlabelattrib; getntcasebyte; setntcasebyte; geteapointer; calcsfnchecksum; calclfnhash; getlastclusnum; getchainclus && echo && echo Internals: getsfnentry; getlfnentry; getlfnentries; getfreeentry; getfreeentries; getdelentry; getdelsfnentry; getlabelentry && echo && goto :eof
 if not /i "%~1"=="help" && if "%~2"=="" && set "message=Argument(s) missing" && goto :eof
 set result=
 debug msg=0
@@ -620,9 +620,9 @@ if "%~1"=="mdbase" && if not "%~2"=="" &; checkrange 0x220:0x3FFFF calc %~2 > nu
 if not exist mdbase && set /A mdbase=0x1FE00 ;; set /A basemem=%mdbase% * 0x200
 if /i "%~1"=="input" && if "%~2"=="" && shift && shift
 if /i "%~1"=="input" && if not "%~2"=="" && if not "%~3"=="" && if not "%~2"=="echo" && if not "%~3"=="echo" && set "input=%~2" && shift && shift
-if not "%~2"=="" && if not "%~2"=="echo" && if not %mode%==getattrib if not %mode%==getmoddate if not %mode%==getmodtime if not %mode%==getaccdate if not %mode%==getcreadate if not %mode%==getcreatime if not %mode%==getdatetimeall if not %mode%==getdatetimeattriball if not %mode%==attribecho if not %mode%==datetimeecho if not %mode%==datetimeallecho if not %mode%==datetimeattribecho if not %mode%==attriballecho if not %mode%==getsfn if not %mode%==getsfnpath if not %mode%==getsfnfile if not %mode%==getlfn if not %mode%==isdir if not %mode%==isreadonly if not %mode%==dellfn if not %mode%==getntcasebyte if not %mode%==geteapointer if not %mode%==calcsfnchecksum if not %mode%==calclfnhash if not %mode%==getlastclusnum if not %mode%==getsfnentry if not %mode%==getlfnentry if not %mode%==getfreeentry if not %mode%==getfreeentries if not %mode%==getdelsfnentry || set result= && set "message=Abort: too many arguments on command-line, check %~2" && goto :eof
-if not "%~3"=="" && if not "%~3"=="echo" && if not %mode%==setmoddate if not %mode%==setmodtime if not %mode%==setaccdate if not %mode%==setcreadate if not %mode%==setcreatime if not %mode%==makelfn if not %mode%==getlabel if not %mode%==setntcasebyte || set result= && set "message=Abort: too many arguments on command-line, check %~3" && goto :eof
-if not "%~4"=="" && if not "%~4"=="echo" && if not %mode%==setdatetime if not %mode%==setcreadatetime if not %mode%==setlabelattrib if not %mode%==getchainclus if not %mode%==getdelentry if not %mode%==getlabelentry || set result= && set "message=Abort: too many arguments on command-line, check %~4" && goto :eof
+if not "%~2"=="" && if not "%~2"=="echo" &; if not %mode%==getattrib if not %mode%==getmoddate if not %mode%==getmodtime if not %mode%==getaccdate if not %mode%==getcreadate if not %mode%==getcreatime if not %mode%==getdatetimeall if not %mode%==getdatetimeattriball if not %mode%==attribecho if not %mode%==datetimeecho if not %mode%==datetimeallecho if not %mode%==datetimeattribecho if not %mode%==attriballecho if not %mode%==getsfn if not %mode%==getsfnpath if not %mode%==getsfnfile if not %mode%==getlfn if not %mode%==isdir if not %mode%==isreadonly if not %mode%==dellfn if not %mode%==getntcasebyte if not %mode%==geteapointer if not %mode%==calcsfnchecksum if not %mode%==calclfnhash if not %mode%==getlastclusnum if not %mode%==getsfnentry if not %mode%==getlfnentry if not %mode%==getfreeentry if not %mode%==getfreeentries if not %mode%==getdelsfnentry || set result= && set "message=Abort: too many arguments on command-line, check %~2" && goto :eof
+if not "%~3"=="" && if not "%~3"=="echo" &; if not %mode%==setmoddate if not %mode%==setmodtime if not %mode%==setaccdate if not %mode%==setcreadate if not %mode%==setcreatime if not %mode%==makelfn if not %mode%==getlabel if not %mode%==setntcasebyte || set result= && set "message=Abort: too many arguments on command-line, check %~3" && goto :eof
+if not "%~4"=="" && if not "%~4"=="echo" &; if not %mode%==setdatetime if not %mode%==setcreadatetime if not %mode%==setlabelattrib if not %mode%==getchainclus if not %mode%==getdelentry if not %mode%==getlabelentry || set result= && set "message=Abort: too many arguments on command-line, check %~4" && goto :eof
 #NOTNOW#if not "%~5"=="" && if not "%~5"=="echo" && if not %mode%== || set result= && set "message=Abort: too many arguments on command-line, check %~5" && goto :eof
 if exist input &; if "%~2"=="echo" && echo "input=%input%" ! if "%~3"=="echo" && echo "input=%input%" ! if "%~4"=="echo" && echo "input=%input%" ! if "%~5"=="echo" && echo "input=%input%" ! if "%~6"=="echo" && echo "input=%input%" ! if "%~7"=="echo" && echo "input=%input%" ! if "%~8"=="echo" && echo "input=%input%"
 call :checkforbiddenchars "%~1" "%~2" &; if %forbiden%==Y && set "message=Forbidden chars found in %~1"
@@ -652,7 +652,7 @@ if %mode%==makelfn && echo -n > (md)%mdbase%+1 && pause --wait=0 "%name%%%ext%" 
 if %mode%==getdelsfnentry && if exist del && call :checksfn "%name%%%ext%" "%~2" &; if not %SFN%==N && set "name=%del%%%name:~1%" && set mode=getsfnentry && set del= ! set result= && set "message=%name%%%ext% is a Long File Name" && goto :eof
 if exist input && setlocal &; %input% &; if not %checkdev%==%device% && endlocal && set input= ! endlocal && set filesys=%filesys% && set root=%root% && set dataarea=%dataarea% && set clussize=%clussize% && set fat1=%fat1% && set fat2=%fat2% && set secpfat=%secpfat% && set devsect=%devsect% && set secpclus=%secpclus% && set numclus=%numclus% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set entry=%entry% && set lfnindex=%lfnindex% && set sfnpath=%sfnpath%
 if %mode%==calcsfnchecksum && set SFN= &; call :checksfn "%name%%%ext%" "%~2" &; if %SFN%==N && set result= && goto :eof
-if %mode%==calcsfnchecksum && call :sfnchecksum "%~2" &; goto :eof
+if %mode%==calcsfnchecksum && call :sfnchecksum "" "%~2" &; goto :eof
 if %mode%==calclfnhash && call :lfnhash "%name%%%ext%" "%~2" &; goto :eof
 if not exist input && call :filesystem "%device%" &; if not exist filesys && set "message=Target filesystem not found" && goto :eof ! if not /i %filesys:~0,3%==fat && set result= && set "message=Target filesystem %filesys% is not FAT" && goto :eof
 if exist input &; if not exist filesys && set result= && set "message=Target filesystem not found" && goto :eof ! if not /i %filesys:~0,3%==fat && set result= && set "message=Target filesystem %filesys% is not FAT" && goto :eof
@@ -734,7 +734,7 @@ if exist root && set /A skipbyte=%root%+0xB && set /A dirlen=%dataarea%-%root% !
 set /A endbyte=%skipbyte%+%dirlen%
 :getsfnlabelloop
 if %echo%==echo && echo B labeltyp=%labeltyp% skipbyte=%skipbyte% dirlen=%dirlen% endbyte=%endbyte% clusnum=%clusnum%
-if %echo%==echo && echo B skipbyte=%skipbyte% volnum=%volnum% clusnum=%clusnum%
+if %echo%==echo && echo C skipbyte=%skipbyte% volnum=%volnum% clusnum=%clusnum%
 if %mode%==getlabel && if not %labeltyp%==08 && raw cat --skip=%skipbyte% --locate=\x28 --length=1 %device%%0+%devsect% | set volentry= &; if exist volentry && set /A volentry=0x%volentry%-0xB
 if %mode%==getlabel && if not %labeltyp%==28 && if not exist volentry && raw cat --skip=%skipbyte% --locate=\x08 --length=1 %device%%0+%devsect% | set volentry= &; if exist volentry && set /A volentry=0x%volentry%-0xB
 if %mode%==setlabelattrib && raw cat --skip=%skipbyte% --locate=\x28 --length=1 %device%%0+%devsect% | set volentry= &; if exist volentry && set /A volentry=0x%volentry%-0xB &; raw cat --skip=%volentry% --locatei="%ENTRY%" --length=11 %device%%0+%devsect% > nul || set volentry=
@@ -742,11 +742,11 @@ if %mode%==setlabelattrib && if not exist volentry && raw cat --skip=%skipbyte% 
 if not exist volentry && set /A skipbyte=%skipbyte%+0x20 &; if not %skipbyte%>=%endbyte% && goto :getsfnlabelloop
 if %mode%==setlabelattrib && if exist volentry && if not %success%==Y && echo -n > (md)%mdbase%+1 && raw dd if=%device%%0+%devsect% of=(md)%mdbase%+1 bs=1 count=0x20 skip=%volentry% > nul && set success=Y
 if not exist volentry && if %clusnum%>=2 && if %skipbyte%>=%dataarea% && set lastclus=%clusnum% && call :lookupFAT "%clusnum%" "%~2" &; if %clusnum%>=2 && set /A bytedone=%clusnum% - 0x2 * %clussize% + %dataarea% && set /A dirlen=%clussize% &; set skipbyte=%bytedone%+0xB && set /A endbyte=%bytedone%+%dirlen% && goto :getsfnlabelloop
-if %echo%==echo && echo C volentry=%volentry% skipbyte=%skipbyte% clusnum=%clusnum% success=%success% && pause
+if %echo%==echo && echo D volentry=%volentry% skipbyte=%skipbyte% clusnum=%clusnum% success=%success% && pause
 if %mode%==getlabel && if exist volentry && raw cat --skip=%volentry% --length=11 %device%%0+%devsect% | set label=
 if %mode%==setlabelattrib && if exist volentry && if %labeltyp%==28 && set entry=%volentry% && call :attributes "+a" "%echo%" &; if not exist result && set volentry=
 if %mode%==setlabelattrib && if exist volentry && if %labeltyp%==08 && set entry=%volentry% && call :attributes "-a" "%echo%" &; if not exist result && set volentry=
-if %echo%==echo && echo D volentry=%volentry% label=%label% && pause
+if %echo%==echo && echo E volentry=%volentry% label=%label% && pause
 endlocal && set "label=%label%" && set volentry=%volentry% && set "message=%message%"
 goto :eof
 ::
@@ -1391,6 +1391,8 @@ if "%~2"=="echo" && call :findfile file "%~2" &; echo A && pager on && set && ec
 if not "%~2"=="echo" && call :findfile "file" &; if not exist entry && set lfnfile= && set "message=SFN %device%%%path%%%name%%%ext% not found" && goto :eof ! if %entry%<=0x200 && set lfnfile= && set "message=%device%%%path%%%name%%%ext% not found, entry=%entry%" && goto :eof
 setlocal && set * && set mdbase=%mdbase% && set root=%root% && set dataarea=%dataarea% && set device=%device% && set "path=%path%" && set "name=%name%" && set "ext=%ext%" && set bytedone=%bytedone% && set dirlen=%dirlen% && set lfnindex=%lfnindex% && set entry=%entry% && set ENTRY=%ENTRY% && set filesys=%filesys% && set clussize=%clussize% && set clusnum=%clusnum%
 if "%~2"=="echo" && pager on && echo B && set && echo && pager off
+#NOT#call :sfnchecksum "%ENTRY%" "%~2" &; if not exist checksum && endlocal && set lfnfile= && set "message=SFN-checksum of %device%%%path%%%name%%%ext% not found" && goto :eof
+#ORG#
 call :sfnchecksum "%ENTRY%" &; if not exist checksum && endlocal && set lfnfile= && set "message=SFN-checksum of %device%%%path%%%name%%%ext% not found" && goto :eof
 if "%~2"=="echo" && echo checksum=%checksum%
 set /A mdlfnA=%mdbase%+1 &; if not /i %filesys%==fat32 && if "%path%"=="/" && set /a lfnsect=%dirlen% / 512 ! set /A lfnsect=%lfnindex% * %dirlen% / 512
@@ -1479,6 +1481,7 @@ set chainlen=%clussize%
 if not %SFN%==N && call :catfile "%name%%%ext%"
 if %mode%==getlfn && if exist lfnindex && set offset=%bytedone% && set search=%dirlen% && set /A endentry=%bytedone%+%dirlen%-0x20 && goto :skipcopygetlfn
 setlocal && set * && set mode=%mode% && set mdbase=%mdbase% && set device=%device% && set devsect=%devsect% && set bytedone=%bytedone% && set dirlen=%dirlen% && set "path=%path%" && set filesys=%filesys%
+#debug#echo %0 "if %mode%==getlfn && if "%path%"=="/" && if not /i %filesys%==fat32 && set lfnindex=0 && set skipcopy=0 && set /A mdlfnA=%mdbase%+1 && set /a lfnsect=%dirlen%/512 &; raw dd if=%device%%0+%devsect% of=(md)%mdlfnA%+%lfnsect% bs=1 count=%dirlen% skip=%bytedone% > nul && pause KEY...
 if %mode%==getlfn && if "%path%"=="/" && if not /i %filesys%==fat32 && set lfnindex=0 && set skipcopy=0 && set /A mdlfnA=%mdbase%+1 && set /a lfnsect=%dirlen%/512 &; raw dd if=%device%%0+%devsect% of=(md)%mdlfnA%+%lfnsect% bs=1 count=%dirlen% skip=%bytedone% > nul
 if "%~2"=="echo" && if %mode%==getlfn && if not /i %filesys%==fat32 && raw cat --hex --length=96 --skip=%skipcopy% (md)%mdlfnA%+%lfnsect%
 if %mode%==getlfn && if "%path%"=="/" && if /i %filesys%==fat32 && set lfnindex=1
@@ -1590,6 +1593,8 @@ raw cat --skip=%entry% --locate=\x25 --length=11 %device%%0+%devsect% > nul && e
 raw cat --skip=%entry% --locate=\xE5 --length=1 %device%%0+%devsect% > nul || raw cat --skip=%entry% --length=11 %device%%0+%devsect% | set sfn=
 if "%~1"=="echo" && raw cat --hex --skip=%entry% --length=0x20 %device%%0+%devsect%
 #NoDiff#if exist sfn && call :getsfnfilename &; if exist sfnfile && call :sfnchecksum "%sfnfile%"
+#NOT#if exist sfn && call :sfnchecksum "%sfn%" "%~2"
+#ORG#
 if exist sfn && call :sfnchecksum "%sfn%" "%~1"
 if "%~1"=="echo" && echo $[0x00]"$[]sfn=$[0xF0]%sfn%$[0x07] checksum=%checksum% entry=%entry% name=%name% ext=%ext% lfn=%lfn%$[0x00]"
 if "%~1"=="echo" && raw cat --hex --skip=%lfnent01% --length=0x20 %device%%0+%devsect%
@@ -1620,9 +1625,13 @@ if not exist sfn && call :catfile "%name%%%ext%" &; if not exist ENTRY && endloc
 if exist sfn && set "ENTRY=%sfn%"
 if "%~2"=="echo" && echo 2 $[0xF0]sfn=%sfn%$[0x07] $[0xF0]ENTRY=%ENTRY%
 echo -e $[0x07]%ENTRY% > (md)%mdbase%+1
-raw cat --hex --skip=0 --length=11 (md)%mdbase%+1 | set hexsfn=
+#GOOD#
+raw cat --hex --skip=0 --length=11 (md)%mdbase%+1 | set hexsfn= &; set "hexsfn=%hexsfn:~0,-13%"
+#BAD#raw cat --hex --skip=0 --length=11 (md)%mdbase%+1 | set hexsfn=
 if "%~2"=="echo" && echo 3 hexsfn=%hexsfn%
+#DEBUG#echo %0 hexsfn=%hexsfn%
 call Fn.11 "%hexsfn%" "25" && endlocal && set checksum= && set "message=Char '%' in Short File Names not supported" && goto :eof
+#BAD#call Fn.11 "%hexsfn%" "25" && endlocal && set checksum= && set "message=Char '%' in Short File Names not supported" && goto :eof
 if exist hexsfn && setlocal && set * && set "hexsfn=%hexsfn%"
 echo -e \x2000\x20%hexsfn:~9,35% | call :checksumSFN
 if exist hexsfn && endlocal && set checksum=%sum%
@@ -1854,6 +1863,9 @@ set /A address=%base%+0xE
 read %address% > nul ;; set /A reserved=%@retval%&0xffff
 set /A address=%base%+0x10
 read %address% > nul ;; set /A numfats=%@retval%&0xff
+#DEBUG#echo %0 numfats=%numfats%
+if not %numfats%>=1 && endlocal && set "message=Abort: number of fat's is zero" && set result= && goto :eof
+if %numfats%>=3 && endlocal && set "message=Abort: %numfats% File Allocation Tables unsupported" && set result= && goto :eof
 set /A address=%base%+0x11
 read %address% > nul ;; set /A rootentr=%@retval%&0xffff
 if not %rootentr%==0 &; calc %rootentr% % 16 && endlocal && set "message=%rootentr% rootentries not supported on %filesys%" && set result= && goto :eof
@@ -1875,16 +1887,19 @@ if %totsect%==0 && read %address% > nul &; set /A totsect=%@retval%&0xffffffff
 if %secpfat%==0 && if /i %filesys%==fat32 && set /A address=%base%+0x24
 if %secpfat%==0 && if /i %filesys%==fat32 && read %address% > nul &; set /A secpfat=%@retval%&0xffff
 set /A rootbyte=%rootentr% * 32
-if %numfats%==2 && set /A fatbyte=%numfats% * %secpfat% * %bytepsec%
+if %numfats%>=1 && set /A fatbyte=%numfats% * %secpfat% * %bytepsec%
+#BAD#if %numfats%==2 && set /A fatbyte=%numfats% * %secpfat% * %bytepsec%
 set /A rsrvbyte=%reserved% * %bytepsec%
 if not /i %filesys%==fat32 && set /A root=%fatbyte% + %rsrvbyte%
 set /A dataarea=%rootbyte% + %fatbyte% + %rsrvbyte%
 set /A clussize=%secpclus% * %bytepsec%
 set /A fat1=%rsrvbyte%
-if exist fatbyte && set /A fat2=%fatbyte% / 2 + %rsrvbyte%
+if exist fatbyte &; if %numfats%==2 && set /A fat2=%fatbyte% / 2 + %rsrvbyte%
+#BAD#if exist fatbyte && set /A fat2=%fatbyte% / 2 + %rsrvbyte%
 if exist fat1 && raw cat --skip=%fat1% --locate=\x%mediabyt:~2% --length=1 %device%%0+%totsect% > nul || endlocal && set filesys= && set "message=Mediabyte %mediabyt% in fat1 does not match" && goto :eof
 #NOTTOBEUSED#if exist fat2 && cat --skip=%fat2% --locate=\x%mediabyt:~2% --length=1 %device%%0+%totsect% > nul || endlocal && set filesys= && set "message=Mediabyte %mediabyt% in fat1 does not match" && goto :eof
 set /A numclus=-%dataarea% / 0x200 + %totsect% / %secpclus%
+#DEBUG#echo %0 fat1=%fat1% fat2=%fat2%
 endlocal && set root=%root% && set dataarea=%dataarea% && set clussize=%clussize% && set fat1=%fat1% && set fat2=%fat2% && set secpfat=%secpfat% && set devsect=%totsect% && set secpclus=%secpclus% && set numclus=%numclus%
 goto :eof
 ::
