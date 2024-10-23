@@ -1,5 +1,5 @@
 !BAT
-#-#+ ATTRIBFT.LLL v0.8.1 (20241018), by deomsh\n (subroutines :checksumSFN and :help originated by Wonko the Sane)
+#-#+ ATTRIBFT.LLL v0.8.1 (20241024), by deomsh\n (subroutines :checksumSFN and :help originated by Wonko the Sane)
 #-#+ Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes,\n volume special case\n Further: get/ set directory entries related to Short and Long File Names
 #-#+ Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 #-#+ Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -893,9 +893,9 @@ if "%~1"=="" && goto :eof
 setlocal
 set entry=%~1 &; raw cat --hex --skip=%entry% --length=16 %device%%0+%devsect% | set hexentry=
 cat --hex --skip=0 --length=16 (md)%mdbase%+1 | set mementry=
-if not "%hexentry:~9,52%"=="%mementry:~9,52%" && endlocal && set issfndir= && set issfnreo= && echo Entry %entry% of %name%%%ext% not found" && goto :eof
+if not "%hexentry:~9,52%"=="%mementry:~9,52%" && endlocal && set issfndir= && set issfnreo= && set "message=Entry %entry% of %name%%%ext% not found" && goto :eof
 #BAD#if not "%hexentry:~9,52%"=="%mementry:~9,52%" && endlocal && set issfndir= && set issfnreo && echo Entry %entry% of %name%%%ext% not found" && goto :eof
-if "%~2"=="echo" && if "%hexentry:~9,52%"=="%mementry:~9,52%" && echo Entry %entry% is in memory ! endlocal && set issfndir= && set issfnreo= && echo Entry %entry% of %name%%%ext% not found" && goto :eof
+if "%~2"=="echo" &; if "%hexentry:~9,52%"=="%mementry:~9,52%" && echo Entry %entry% is in memory ! endlocal && set issfndir= && set issfnreo= && echo Entry %entry% of %name%%%ext% not found && goto :eof
 #BAD#if "%~2"=="echo" && if "%hexentry:~9,52%"=="%mementry:~9,52%" && echo Entry %entry% is in memory ! endlocal && set issfndir= && set issfnreo && echo Entry %entry% of %name%%%ext% not found" && goto :eof
 if %mode%==issfndir && call :attributes "%~2" &; if %d%==d && set issfndir=1 ! set issfndir=0
 if %mode%==issfnreadonly && call :attributes "%~2" &; if %r%==r && set issfnreo=1 ! set issfnreo=
