@@ -1,5 +1,5 @@
 !BAT
-#-#+ ATTRIBFT.LLL v0.8.1 (20241024), by deomsh\n (subroutines :checksumSFN and :help originated by Wonko the Sane)
+#-#+ ATTRIBFT.LLL v0.8.1 (20241027), by deomsh\n (subroutines :checksumSFN and :help originated by Wonko the Sane)
 #-#+ Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes,\n volume special case\n Further: get/ set directory entries related to Short and Long File Names
 #-#+ Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 #-#+ Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -967,42 +967,45 @@ set "lfn=%name%%%ext%" &; set "lfn=%lfn%" &; set /a lfnlen=%@retval% &; if %lfnl
 #NOTOKE#set SFN= && call :checksfn "%name%%%ext%" &; if not %SFN%==N && endlocal && set "message=%name%%%ext% is SFN" && goto :eof
 setlocal && set mode=getsfnpath &; call :findpath "%path%" "%echo%" &; endlocal && set sfnpath=%sfnpath% && set clusnum=%clusnum% && set bytedone=%bytedone% && set dirlen=%dirlen% && set success=%success% && set chainlen=%chainlen% &; if not exist sfnpath && endlocal && set "message=sfnpath not found" && goto :eof
 set chainlen=%clussize%
-if %echo%==echo && echo 1 clusnum=%clusnum% clusnum0=%clusnum0% clusnum1=%clusnum1% bytedone=%bytedone% dirlen=%dirlen% success=%success% sfnpath=%sfnpath%
+if %echo%==echo &; echo 1 clusnum=%clusnum% clusnum0=%clusnum0% clusnum1=%clusnum1% bytedone=%bytedone% dirlen=%dirlen% success=%success% sfnpath=%sfnpath%
 #BAD!#if "%path%"=="/" && set clusnum=1
 if "%path%"=="/" && set clusnum=2
 :dellfnfileloop
 set mode=getlfnentry &; call :findsfn "%name%%%ext%" "file" "%echo%" &; if not exist lfnentry &; if not %written%==Y && endlocal && set "message=Directory-entry of %device%%%path%%%name%%%ext% not found" && goto :eof ! endlocal && set "dellfn=%dellfn%" && goto :eof
-if %echo%==echo && echo 2 clusnum=%clusnum% clusnum0=%clusnum0% clusnum1=%clusnum1% bytedone=%bytedone% dirlen=%dirlen% success=%success% sfnpath=%sfnpath% sfnfile=%sfnfile% sfn=$[0xF0]%sfn%
-if %echo%==echo && echo 3$[0x00]"$[]lfnentry=%lfnentry% lfnent01=%lfnent01% lfnbyteA=%lfnbyteA% lfnbyteB=%lfnbyteB%$[0x00]" && pause
+if %echo%==echo &; echo 2 clusnum=%clusnum% clusnum0=%clusnum0% clusnum1=%clusnum1% bytedone=%bytedone% dirlen=%dirlen% success=%success% sfnpath=%sfnpath% sfnfile=%sfnfile% sfn=$[0xF0]%sfn%
+if %echo%==echo &; echo 3$[0x00]"$[]lfnentry=%lfnentry% lfnent01=%lfnent01% lfnbyteA=%lfnbyteA% lfnbyteB=%lfnbyteB%$[0x00]" && pause
 set mode=dellfn
 if exist lfnbyteA && if %lfnbyteA%<=%lfnentry% && set lfnbyteA=
 if exist lfnbyteB && if %lfnbyteB%<=%lfnentry% && set lfnbyteB=
 if exist lfnbyteA && set /a lfnnumA=%lfnent01%+0x20-%lfnbyteA%/0x20 ! set lfnnumA=0
 if exist lfnbyteB && set /a lfnnumB=%clussize%/0x20 ! set lfnnumB=0
-if %echo%==echo && echo 4 device=%device% sfnpath=%sfnpath% sfnfile=%sfnfile% lfnnumA=%lfnnumA% lfnnumB=%lfnnumB%
+if %echo%==echo &; echo 4 device=%device% sfnpath=%sfnpath% sfnfile=%sfnfile% lfnnumA=%lfnnumA% lfnnumB=%lfnnumB%
 set "lfn=%name%%%ext%" &; set "lfn=%lfn%" &; set /a lfnlen=%@retval% && set c=0 && set w=0
 if %lfnlen%<=13 && set n=1 ! if %lfnlen%<=26 && set n=2 ! if %lfnlen%<=39 && set n=3 ! if %lfnlen%<=52 && set n=4 ! if %lfnlen%<=65 && set n=5 ! if %lfnlen%<=78 && set n=6 ! if %lfnlen%<=91 && set n=7 ! if %lfnlen%<=104 && set n=8 ! if %lfnlen%<=117 && set n=9 ! if %lfnlen%<=130 && set n=10 ! if %lfnlen%<=143 && set n=11 ! if %lfnlen%<=156 && set n=12 ! if %lfnlen%<=169 && set n=13 ! if %lfnlen%<=182 && set n=14 ! if %lfnlen%<=195 && set n=15 ! if %lfnlen%<=208 && set n=16 ! if %lfnlen%<=221 && set n=17 ! if %lfnlen%<=234 && set n=18 ! if %lfnlen%<=247 && set n=19 ! if %lfnlen%<=255 && set n=20 ! endlocal && set "message=LFN is above 255 chars" && set lfnentry= && goto :eof
 set /a lfnnumC=%n%-%lfnnumA%-%lfnnumB% &; set /a lfnnumD=%lfnnumC%+%lfnnumB%
-if %echo%==echo && echo 5$[0x00]"$[]lfn=%lfn% lfnlen=%lfnlen% n=%n% lfnentry=%lfnentry% lfnent01=%lfnent01% lfnnumA=%lfnnumA% lfnnumB=%lfnnumB%$[0x00]"
-if %echo%==echo && echo lfnentry=%lfnentry% lfnnumC=%lfnnumC% lfnbyteB=%lfnbyteB% lfnnumB=%lfnnumB% lfnbyteA=%lfnbyteA% lfnnumA=%lfnnumA% lfnent01=%lfnent01%
-if %echo%==echo && if exist lfnentry && raw cat --hex --skip=%lfnentry% --length=96 %device%%0+%devsect%
+if %echo%==echo &; echo 5$[0x00]"$[]lfn=%lfn% lfnlen=%lfnlen% n=%n% lfnentry=%lfnentry% lfnent01=%lfnent01% lfnnumA=%lfnnumA% lfnnumB=%lfnnumB%$[0x00]"
+if %echo%==echo &; echo 6 lfnentry=%lfnentry% lfnnumC=%lfnnumC% lfnbyteB=%lfnbyteB% lfnnumB=%lfnnumB% lfnbyteA=%lfnbyteA% lfnnumA=%lfnnumA% lfnent01=%lfnent01%
+if %echo%==echo &; if exist lfnentry && raw cat --hex --skip=%lfnentry% --length=96 %device%%0+%devsect%
 if /i %filesys%==FAT32 && if not %lfnentry%>=%dataarea% && endlocal && set "message=Something went wrong in function %mode%" && set lfnentry= && goto :eof
 if not /i %filesys%==FAT32 && if not %lfnentry%>=%root% && endlocal && set "message=Something went wrong in function %mode%" && set lfnentry= && goto :eof
 if not %lfnentry%>=%bytedone% && endlocal && set "message=Something went wrong in function %mode%" && set lfnentry= && goto :eof
-if %echo%==echo && echo 6 lfnentry=%lfnentry% c=%c% n=%n% lfnnumC=%lfnnumC% lfnnumB=%lfnnumB% lfnnumA=%lfnnumA%
-if %echo%==echo && echo Delete$[0x00]"$[]%device%%%path%%%name%%%ext%?$[0x00]"
-if %echo%==echo && set /p /u "delete= Y/N > " && echo
-if %echo%==echo && if not %delete%==Y && endlocal && goto :eof
+if %echo%==echo &; echo 7 lfnentry=%lfnentry% c=%c% n=%n% lfnnumC=%lfnnumC% lfnnumB=%lfnnumB% lfnnumA=%lfnnumA%
+if %echo%==echo &; echo Delete$[0x00]"$[]%device%%%path%%%name%%%ext%?$[0x00]"
+if %echo%==echo &; set /p /u "delete= Y/N > " && echo
+if %echo%==echo &; if not %delete%==Y && endlocal && goto :eof
 set delentry=%lfnentry% && set /A ordinal=%n%+0x40
 :dellfnloop
 if not %delentry%>=0x200 && endlocal && set "message=Something went wrong in function %mode% delentry=%delentry%" && set lfnentry= && goto :eof
 if exist lfnnumB && if %lfnnumB%>=1 && if %c%==%lfnnumC% && set delentry=%lfnbyteB% && set /a lfnnumC=%lfnnumC%+%lfnnumB% && set lfnnumB=
 if exist lfnnumA && if %lfnnumA%>=1 && if %c%==%lfnnumD% && set delentry=%lfnbyteA% && set /a lfnnumC=%lfnnumC%+%lfnnumA% && set lfnnumA=
-if not %echo%==echo && if exist delentry && set written= && set /A attentry=%delentry%+0xB &; raw cat --skip=%delentry% --locate=\x%ordinal:~2% --length=1 %device%%0+%devsect% > nul && raw cat --skip=%attentry% --locate=\x0F --length=1 %device%%0+%devsect% > nul && set check=Y && raw write --offset=%delentry% %device%%0+%devsect% \xE5 > nul && set written=Y && set w=0 && set /a c=%c%+1 && if not %ordinal%<=%n% && set ordinal=%n%
-if not %check%==Y && endlocal && set "message=Abort: bad delete-lfn! No E5 written to %delentry%, first byte not expected %ordinal%, or %attentry% not 0F; check or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
-if %echo%==echo && if exist delentry && set written= &; raw write --offset=%delentry% %device%%0+%devsect% \xE5 > nul && echo E5 written to %delentry% && set written=Y && set w=0 && set /a c=%c%+1
-if %echo%==echo && echo 6 delentry=%delentry% c=%c% n=%n% lfnbyteB=%lfnbyteB% lfnbyteA=%lfnbyteA% lfnent01=%lfnent01% lfnnumC=%lfnnumC% lfnnumB=%lfnnumB% lfnnumA=%lfnnumA%
-if %echo%==echo && if exist delentry && raw cat --hex --skip=%delentry% --length=32 %device%%0+%devsect% && pause
+if not %echo%==echo &; if exist delentry && set written= && set /A attentry=%delentry%+0xB &; raw cat --skip=%delentry% --locate=\x%ordinal:~2% --length=1 %device%%0+%devsect% > nul && raw cat --skip=%attentry% --locate=\x0F --length=1 %device%%0+%devsect% > nul && set check=Y && raw write --offset=%delentry% %device%%0+%devsect% \xE5 > nul && set written=Y && set w=0 && set /a c=%c%+1 && if not %ordinal%<=%n% && set ordinal=%n%
+#NEWforDEBUG#
+if not %echo%==echo &; if not %check%==Y && endlocal && set "message=Abort: bad delete-lfn! No E5 written to %delentry%, first byte not expected %ordinal%, or %attentry% not 0F; check or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
+#ORG#if not %check%==Y && endlocal && set "message=Abort: bad delete-lfn! No E5 written to %delentry%, first byte not expected %ordinal%, or %attentry% not 0F; check or run ScandiskW/ CHECKDSK from inside Windows etcetera" && set lfnentry= && goto :eof
+#############
+if %echo%==echo &; if exist delentry && set written= &; raw write --offset=%delentry% %device%%0+%devsect% \xE5 > nul && echo E5 written to %delentry% && set written=Y && set w=0 && set /a c=%c%+1
+if %echo%==echo &; echo 8 delentry=%delentry% c=%c% n=%n% lfnbyteB=%lfnbyteB% lfnbyteA=%lfnbyteA% lfnent01=%lfnent01% lfnnumC=%lfnnumC% lfnnumB=%lfnnumB% lfnnumA=%lfnnumA%
+if %echo%==echo &; if exist delentry && raw cat --hex --skip=%delentry% --length=32 %device%%0+%devsect% && pause
 if %w%<=7 &; if not %written%==Y && set /a w=%w%+1 && goto :dellfnloop ! if not %c%>=%n% && set /A delentry=%delentry%+0x20 && set /A ordinal=%ordinal%-1 && set check= && set attentry= && goto :dellfnloop
 if %w%>=8 && endlocal && set lfnentry= && set "message=LFN Not fully deleted! Check lfnentry=%lfnentry% lfnnumB=%lfnnumB% lfnbyteB=%lfnbyteB% lfnnumA=%lfnnumA% lfnbyteA=%lfnbyteA% lfnent01=%lfnent01%" && goto :eof
 set "dellfn=set mode=%mode% && set sfnpath=%sfnpath% && set sfnfile=%sfnfile% && set lfnentry=%lfnentry% && set n=%n% && set lfnbyteB=%lfnbyteB% && set lfnbyteA=%lfnbyteA% && set lfnent01=%lfnent01% && set chainlen=%chainlen%"
