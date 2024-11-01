@@ -1,4 +1,4 @@
-ATTRIBFT.LLL v0.8.1 (20241027), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+ATTRIBFT.LLL v0.9 (20241101), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
 Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -17,7 +17,7 @@ List of Functions
 Attributes: getattrib; setattrib; setlabelattrib
 Date and Time: getdate; gettime; getaccdate; getcreadate; getcreatime; getdatetimeall; getdatetimeattriball; setdate; settime; setaccdate; setcreadate; setcreatime; setdatetime; setcreadatetime
 Service: attribecho; attriballecho; datetimeecho; datetimeallecho; datetimeattribecho
-Long File Names: getsfn; getsfnpath; getsfnfile; getlfn; makelfn; dellfn
+Long File Names: getsfn; getsfnpath; getsfnfile; getlfn; makelfn; dellfn; getlfnpath
 Special: isdir; isreadonly; getlabel; getntcasebyte; setntcasebyte; geteapointer; calcsfnchecksum; calclfnhash; getlastclusnum; getchainclus
 Internals: getsfnentry; getlfnentry; getlfnentries; getfreeentry; getfreeentries; getdelentry; getdelsfnentry; getlabelentry
 
@@ -25,11 +25,14 @@ Grub4Dos only, should work on version 0.46a 2017-05-05 and upwards (Grub4dos for
 
 Simple debug echo-system still active: give 'echo' (without qoutes) as last argument to 'view' what is going on (in most funtions)
 
-Changes V0.8.1
-1) New: compatible with only ONE File Allocation Table (number of FAT's = 1)
-2) BUGFIX: sfnchecksum '%' detected if '25' in filename
-3) BUGFIX: in sub-routine ':issfnattrib'
-4) BUGFIX: regarding debug switch 'echo'
+Changes V0.9
+1) New: function 'getlfnpath'
+2) New: label-functions returns message if no label is found
+3) New: compatible with only ONE File Allocation Table (number of FAT's = 1)
+3) BUGFIX: functions 'isdir' and 'isreadonly' not compatible if on disk >= 4GB (should now be working < 1TB)
+4) BUGFIX: sfnchecksum '%' detected if '25' in filename
+5) BUGFIX: in sub-routine ':issfnattrib'
+6) BUGFIX: regarding debug switch 'echo'
 
 Changes V0.8
 1) Improroved FAT-detection: number of root-entries checked for multiples of 16
