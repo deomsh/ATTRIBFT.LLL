@@ -1,4 +1,4 @@
-ATTRIBFT.LLL v0.9 (20241101), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+ATTRIBFT.LLL v0.9 (20241103), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
 Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -29,10 +29,11 @@ Changes V0.9
 1) New: function 'getlfnpath'
 2) New: label-functions returns message if no label is found
 3) New: compatible with only ONE File Allocation Table (number of FAT's = 1)
-3) BUGFIX: functions 'isdir' and 'isreadonly' not compatible if on disk >= 4GB (should now be working < 1TB)
-4) BUGFIX: sfnchecksum '%' detected if '25' in filename
-5) BUGFIX: in sub-routine ':issfnattrib'
-6) BUGFIX: regarding debug switch 'echo'
+4) BUGFIX: functions 'isdir' and 'isreadonly' not compatible if on disk >= 4GB (should now be working < 1TB)
+5) BUGFIX: functions 'settime' and 'setattrib' and 'makelfn' sfnentry not found in certain cases if namepart < 8 chars
+6) BUGFIX: sfnchecksum '%' detected if '25' in filename
+7) BUGFIX: in sub-routine ':issfnattrib'
+8) BUGFIX: regarding debug switch 'echo'
 
 Changes V0.8
 1) Improroved FAT-detection: number of root-entries checked for multiples of 16
