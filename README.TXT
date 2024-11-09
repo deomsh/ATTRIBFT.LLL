@@ -1,4 +1,4 @@
-ATTRIBFT.LLL v0.9 (20241103), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+ATTRIBFT.LLL v0.9.1 (20241109), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
 Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -21,9 +21,14 @@ Long File Names: getsfn; getsfnpath; getsfnfile; getlfn; makelfn; dellfn; getlfn
 Special: isdir; isreadonly; getlabel; getntcasebyte; setntcasebyte; geteapointer; calcsfnchecksum; calclfnhash; getlastclusnum; getchainclus
 Internals: getsfnentry; getlfnentry; getlfnentries; getfreeentry; getfreeentries; getdelentry; getdelsfnentry; getlabelentry
 
-Grub4Dos only, should work on version 0.46a 2017-05-05 and upwards (Grub4dos for UEFI is tested, boot rather soon 'out of malloc memory')
+Grub4Dos only, should work on version 0.46a 2017-05-05 and upwards (NO check!)
+Grub4dos for UEFI is tested, boot rather soon 'out of malloc memory' (last version 20240901)
 
 Simple debug echo-system still active: give 'echo' (without qoutes) as last argument to 'view' what is going on (in most funtions)
+
+Changes V0.9.1
+1) BUGFIX: for use with 'help' unload ATTRIBFT.LLL if still loaded with insmod
+2) BUGFIX: bettter compatibility if full grub4dos script-line is part of 'name' or 'path' or read-out from disk
 
 Changes V0.9
 1) New: function 'getlfnpath'
@@ -81,6 +86,9 @@ Changes V0.6:
 
 
 ATTRIBFT.G4B is a simple Grub4Dos command-line frontend for ATTRIBFT.LLL, will sent arguments/ parameters to ATTRIBFT.LLL - must reside in same directory
+
+Changes V0.4:
+NEW: check if grub4dos version >= 20270505 is in use
 
 Changes V0.3:
 Bugfixes
