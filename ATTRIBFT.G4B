@@ -1,6 +1,7 @@
 !BAT
-#-#+ ATTRIBFT.G4B v.0.3 (20241009), by deomsh
+#-#+ ATTRIBFT.G4B v.0.4 (20241109), by deomsh
 #-#+ Command-line frontend for ATTRIBFT.LLL
+if not exist @uefi &; setlocal && set /a version=*0x8278&0xFFFFFFFF > nul &; if %version%>=20170505 && endlocal ! echo Grub4dos version %version% too old, use version 20170505 or later && endlocal && goto :eof
 setlocal
 debug status > nul ;; set /a debugsts=%@retval% > nul ;; debug 1
 pager status > nul ;; set /a pagersts=%@retval% > nul
