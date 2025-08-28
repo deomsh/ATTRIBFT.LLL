@@ -1,6 +1,6 @@
 ## ATTRIBFT.LLL v0.9.2 (20250827), by deomsh
 <pre><code>Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case
-Further: get/ set directory entries related to Short and Long File Names
+           Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL function [Optional Argument(s)] FILE [parameter(s)]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
 Use: ATTRIBFT.LLL help [function-name] gives specific help on function
