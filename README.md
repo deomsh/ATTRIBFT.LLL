@@ -1,5 +1,6 @@
 ## ATTRIBFT.LLL v0.9.2 (20250827), by deomsh
-<pre><code>Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
+<pre><code>Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case
+Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
 Use: ATTRIBFT.LLL <help> [<function-name>] <help function> gives specific help
@@ -8,9 +9,12 @@ Remark Mandatory Arguments: functionname not case sensitive, most functions too.
 Remark Long File Names: between double-quotes or use escaped spaces: '\ '. (or '\=' if using '=')
 Remark Volume label: if searched give 8+3 filename. Uppercase supported only
 Remark Parameters: function-specific, AND after FILE
-Remark Returns: ONLY if 'success-variable' 'result' exists, content is function-specific. If any error: variable 'message' exists, containing textual error. Variable 'output' consists of set-variables, device-specific and mostly FAT-bootsector-specs
+Remark Returns: ONLY if 'success-variable' 'result' exists, content is function-specific. 
+If any error: variable 'message' exists, containing textual error. 
+Variable 'output' consists of set-variables, device-specific and mostly FAT-bootsector-specs
 Remark Optional Arguments: order is NOT free, MUST given before FILE
-1 <mdbase=N-sectors> (no qoutes!) changes base-address of working memory (default 0x20000, range 0x220:0x3FFFF). No check for ranges used by Grub4dos!
+1 <mdbase=N-sectors> (no qoutes!) changes base-address of working memory (default 0x20000, range 0x220:0x3FFFF)
+  No check for ranges used by Grub4dos!
 2 <input="%output%"> (only mandatory double-qoutes for second part!) for inserting predefined set-variables (with && ) to speed up operation
 
 List of Functions
