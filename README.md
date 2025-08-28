@@ -1,4 +1,4 @@
-## ATTRIBFT.LLL v0.9.2 (20250827), by deomsh (subroutines :checksumSFN and :help originated by Wonko the Sane)
+## ATTRIBFT.LLL v0.9.2 (20250827), by deomsh
 <pre><code>Functions: Find FAT12/ FAT16/ FAT32 file/ directory attributes, volume special case Further: get/ set directory entries related to Short and Long File Names
 Use: ATTRIBFT.LLL <function> [Optional Argument(s)] <FILE> [<parameter(s)>]
 Use: ATTRIBFT.LLL (without arguments) shows all function-names
@@ -24,7 +24,9 @@ Internals: getsfnentry; getlfnentry; getlfnentries; getfreeentry; getfreeentries
 Grub4Dos only, should work on version 0.46a 2017-05-05 and upwards (NO check!)
 Grub4dos for UEFI is tested, boot rather soon 'out of malloc memory' (last version 20240901)
 
-Simple debug echo-system still active: give 'echo' (without qoutes) as last argument to 'view' what is going on (in most funtions)</code></pre>    
+Simple debug echo-system still active: give 'echo' (without qoutes) as last argument to 'view' what is going on (in most funtions)
+
+(subroutines :checksumSFN and :help originated by Wonko the Sane)</code></pre>    
 
 ### HISTORY  
 Changes V0.9.2  
