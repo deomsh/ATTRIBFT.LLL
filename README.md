@@ -113,4 +113,5 @@ Changes V0.2:
 Highcol output for result if starting spaces in Long File Name  
 
 ### SCREENSHOTS
-![TEXTSTAT G4B ATTRIBFT LLL version 0 9 2 after cleaning](https://github.com/user-attachments/assets/362c8dcb-d856-4df2-9d36-68251195aa0b)
+![TEXTSTAT G4B ATTRIBFT LLL version 0 9 2 after cleaning](https://github.com/user-attachments/assets/a14c5353-80f2-4cb2-a0da-a0eb66b9bc76)
+
